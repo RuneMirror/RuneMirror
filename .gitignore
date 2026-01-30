@@ -1,0 +1,29 @@
+# Intentionally left without comments per project guidelines
+
+# Java / Maven
+**/target/
+*.jar
+
+# IDEs
+.vscode/
+**/.idea/
+**/*.iml
+
+# Eclipse
+**/.classpath
+**/.project
+**/.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+gitlog
+
+GuestProfiles/**/.runelite/
+GuestProfiles/**/.runelite/**
+GuestProfiles/**/jagexcache/
+GuestProfiles/**/jagexcache/**

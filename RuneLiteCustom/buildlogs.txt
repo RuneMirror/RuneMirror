@@ -1,0 +1,504 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom> mvn -DskipTests clean install
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] RuneLite                                                           [pom]
+[INFO] Cache                                                              [jar]
+[INFO] RuneLite Maven Plugin                                     [maven-plugin]
+[INFO] RuneLite API                                                       [jar]
+[INFO] RuneLite JShell                                                    [jar]
+[INFO] RuneLite Client                                                    [jar]
+[INFO]
+[INFO] --------------------< net.runelite:runelite-parent >--------------------
+[INFO] Building RuneLite 1.12.7-SNAPSHOT                                  [1/6]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ runelite-parent ---
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-parent ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-parent ---
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-parent ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] --- install:3.1.2:install (default-install) @ runelite-parent ---
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\pom.xml to C:\Users\James\.m2\repository\net\runelite\runelite-parent\1.12.7-SNAPSHOT\runelite-parent-1.12.7-SNAPSHOT.pom
+[INFO]
+[INFO] -------------------------< net.runelite:cache >-------------------------
+[INFO] Building Cache 1.12.7-SNAPSHOT                                     [2/6]
+[INFO]   from cache\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ cache ---
+[INFO] Deleting C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target
+[INFO]
+[INFO] --- antlr4:4.13.1:antlr4 (process-resources) @ cache ---
+[INFO] ANTLR 4: Processing source directory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\src\main\antlr4
+[INFO] Processing grammar: net\runelite\cache\script\assembler\rs2asm.g4
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ cache ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ cache ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.6.1:compile (default-compile) @ cache ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 190 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\classes
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/cache/src/main/java/net/runelite/cache/script/assembler/Assembler.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/cache/src/main/java/net/runelite/cache/script/assembler/Assembler.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/cache/src/main/java/net/runelite/cache/definitions/loaders/ScriptLoader.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/cache/src/main/java/net/runelite/cache/definitions/loaders/ScriptLoader.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ cache ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ cache ---
+[INFO] Copying 6 resources from src\test\resources to target\test-classes
+[INFO] The encoding used to copy filtered properties files have not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO]
+[INFO] --- compiler:3.6.1:testCompile (default-testCompile) @ cache ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 51 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\test-classes
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ cache ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ cache ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- assembly:3.2.0:single (make-assembly) @ cache ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT-jar-with-dependencies.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ cache ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] --- jar:3.2.0:test-jar (default) @ cache ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT-tests.jar
+[INFO]
+[INFO] --- install:3.1.2:install (default-install) @ cache ---
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\pom.xml to C:\Users\James\.m2\repository\net\runelite\cache\1.12.7-SNAPSHOT\cache-1.12.7-SNAPSHOT.pom
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT.jar to C:\Users\James\.m2\repository\net\runelite\cache\1.12.7-SNAPSHOT\cache-1.12.7-SNAPSHOT.jar
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT-jar-with-dependencies.jar to C:\Users\James\.m2\repository\net\runelite\cache\1.12.7-SNAPSHOT\cache-1.12.7-SNAPSHOT-jar-with-dependencies.jar
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT-tests.jar to C:\Users\James\.m2\repository\net\runelite\cache\1.12.7-SNAPSHOT\cache-1.12.7-SNAPSHOT-tests.jar
+[INFO]
+[INFO] -----------------< net.runelite:runelite-maven-plugin >-----------------
+[INFO] Building RuneLite Maven Plugin 1.12.7-SNAPSHOT                     [3/6]
+[INFO]   from runelite-maven-plugin\pom.xml
+[INFO] ----------------------------[ maven-plugin ]----------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ runelite-maven-plugin ---
+[INFO] Deleting C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\target
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-maven-plugin ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ runelite-maven-plugin ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\src\main\resources
+[INFO]
+[INFO] --- compiler:3.6.1:compile (default-compile) @ runelite-maven-plugin ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\target\classes
+[INFO]
+[INFO] --- plugin:3.6.0:descriptor (default-descriptor) @ runelite-maven-plugin ---
+[INFO] Using 'UTF-8' encoding to read mojo source files.
+[INFO] java-javadoc mojo extractor found 0 mojo descriptor.
+[INFO] java-annotations mojo extractor found 3 mojo descriptors.
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-maven-plugin ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ runelite-maven-plugin ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\src\test\resources
+[INFO]
+[INFO] --- compiler:3.6.1:testCompile (default-testCompile) @ runelite-maven-plugin ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ runelite-maven-plugin ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ runelite-maven-plugin ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\target\runelite-maven-plugin-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-maven-plugin ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] >>> pmd:3.22.0:check (default) > :pmd @ runelite-maven-plugin >>>
+[INFO]
+[INFO] --- pmd:3.22.0:pmd (pmd) @ runelite-maven-plugin ---
+[INFO] Skipping PMD execution
+[INFO]
+[INFO] <<< pmd:3.22.0:check (default) < :pmd @ runelite-maven-plugin <<<
+[INFO]
+[INFO]
+[INFO] --- pmd:3.22.0:check (default) @ runelite-maven-plugin ---
+[INFO] Skipping PMD execution
+[INFO]
+[INFO] --- install:3.1.2:install (default-install) @ runelite-maven-plugin ---
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\pom.xml to C:\Users\James\.m2\repository\net\runelite\runelite-maven-plugin\1.12.7-SNAPSHOT\runelite-maven-plugin-1.12.7-SNAPSHOT.pom
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-maven-plugin\target\runelite-maven-plugin-1.12.7-SNAPSHOT.jar to C:\Users\James\.m2\repository\net\runelite\runelite-maven-plugin\1.12.7-SNAPSHOT\runelite-maven-plugin-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] ---------------------< net.runelite:runelite-api >----------------------
+[INFO] Building RuneLite API 1.12.7-SNAPSHOT                              [4/6]
+[INFO]   from runelite-api\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ runelite-api ---
+[INFO] Deleting C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-api ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:pack-components (pack-components) @ runelite-api ---
+ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
+ANTLR Runtime version 4.11.1 used for parser compilation does not match the current runtime version 4.13.1
+ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
+ANTLR Runtime version 4.11.1 used for parser compilation does not match the current runtime version 4.13.1
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ runelite-api ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\src\main\resources
+[INFO]
+[INFO] --- compiler:3.6.1:compile (default-compile) @ runelite-api ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 291 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\classes
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/main/java/net/runelite/api/Client.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/main/java/net/runelite/api/Client.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/main/java/net/runelite/api/geometry/Shapes.java: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\src\main\java\net\runelite\api\geometry\Shapes.java uses unchecked or unsafe operations.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/main/java/net/runelite/api/geometry/Shapes.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-api ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ runelite-api ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\src\test\resources
+[INFO]
+[INFO] --- compiler:3.6.1:testCompile (default-testCompile) @ runelite-api ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\test-classes
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/test/java/net/runelite/api/DistinctIdTest.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-api/src/test/java/net/runelite/api/DistinctIdTest.java: Recompile with -Xlint:deprecation for details.
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ runelite-api ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ runelite-api ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- jar:3.2.0:jar (runtime-jar) @ runelite-api ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT-runtime.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-api ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] --- install:3.1.2:install (default-install) @ runelite-api ---
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\pom.xml to C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.pom
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT.jar to C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT-runtime.jar to C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT-runtime.jar
+[INFO]
+[INFO] ------------------------< net.runelite:jshell >-------------------------
+[INFO] Building RuneLite JShell 1.12.7-SNAPSHOT                           [5/6]
+[INFO]   from runelite-jshell\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ jshell ---
+[INFO] Deleting C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\target
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ jshell ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ jshell ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.6.1:compile (default-compile) @ jshell ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\target\classes
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ jshell ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jshell ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\src\test\resources
+[INFO]
+[INFO] --- compiler:3.6.1:testCompile (default-testCompile) @ jshell ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ jshell ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ jshell ---
+[INFO] Building jar: C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\target\jshell-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ jshell ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] --- install:3.1.2:install (default-install) @ jshell ---
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\pom.xml to C:\Users\James\.m2\repository\net\runelite\jshell\1.12.7-SNAPSHOT\jshell-1.12.7-SNAPSHOT.pom
+[INFO] Installing C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-jshell\target\jshell-1.12.7-SNAPSHOT.jar to C:\Users\James\.m2\repository\net\runelite\jshell\1.12.7-SNAPSHOT\jshell-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] ------------------------< net.runelite:client >-------------------------
+[INFO] Building RuneLite Client 1.12.7-SNAPSHOT                           [6/6]
+[INFO]   from runelite-client\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml
+Downloaded from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml (783 B at 2.5 kB/s)
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ client ---
+[INFO] Deleting C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\target
+[INFO]
+[INFO] --- git-commit-id:2.2.6:revision (query-git-info) @ client ---
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ client ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:assemble (assemble) @ client ---
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\BankMainBuild.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\BankpinButtonSetup.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\BankSearchFilter.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatboxInputWidgetBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatDefaultOnKey.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatSend.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatSplitBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ChatTimestamp.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\CombatInterfaceSP.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\DestroyOnOpKey.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ExamineItem.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\fairyrings_sort_update.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\FakeXpDrop.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\FriendsChatSendKick.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\FriendUpdate.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\GeExamineInfoText.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\GELayout.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\IgnoreUpdate.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\LayoutResizableStones.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\MagicSpellbookRedraw.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\null.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\OpenBankSearchInput.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\OptionsPanelZoomMouseListener.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\OptionsPanelZoomUpdater.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\PrivateMessage.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\QuestFilter.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\ScrollWheelZoomHandler.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\SendPrivateMessage.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\SkillTabBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\SkillTabTotalLevel.rs2asm
+[debug] Assembling C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\src\main\scripts\TriggerBankLayout.rs2asm
+[info] Assembled 32 scripts
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:build-index (build-index) @ client ---
+[INFO]
+[INFO] --- resources:3.0.2:resources (default-resources) @ client ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 702 resources
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- compiler:3.6.1:compile (default-compile) @ client ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1363 source files to C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom\runelite-client\target\classes
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/OfferHandler.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/OfferHandler.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/config/ConfigManager.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/config/ConfigManager.java: Recompile with -Xlint:unchecked for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[111,35] cannot find symbol
+  symbol:   variable gson
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[123,17] cannot find symbol
+  symbol:   variable clientToolbar
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[124,61] cannot find symbol
+  symbol:   variable copilotLoginController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[124,17] cannot find symbol
+  symbol:   variable apiRequestHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[125,17] cannot find symbol
+  symbol:   variable copilotLoginController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[126,17] cannot find symbol
+  symbol:   variable copilotLoginController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[127,17] cannot find symbol
+  symbol:   variable suggestionController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[128,17] cannot find symbol
+  symbol:   variable suggestionController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[129,17] cannot find symbol
+  symbol:   variable suggestionController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[130,17] cannot find symbol
+  symbol:   variable suggestionController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[131,17] cannot find symbol
+  symbol:   variable grandExchangeCollectHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[145,67] cannot find symbol
+  symbol:   variable accountStatusManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[160,17] cannot find symbol
+  symbol:   variable clientToolbar
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[166,33] cannot find symbol
+  symbol:   variable webHookController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[169,17] cannot find symbol
+  symbol:   variable keybindHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[180,17] cannot find symbol
+  symbol:   variable offerEventHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[186,66] cannot find symbol
+  symbol:   variable grandExchange
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[187,25] cannot find symbol
+  symbol:   variable suggestionManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[195,17] cannot find symbol
+  symbol:   variable suggestionController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[196,17] cannot find symbol
+  symbol:   variable offerEventHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[201,28] cannot find symbol
+  symbol:   variable grandExchange
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[202,17] cannot find symbol
+  symbol:   variable grandExchangeCollectHandler
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[251,33] cannot find symbol
+  symbol:   variable suggestionManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[254,33] cannot find symbol
+  symbol:   variable accountStatusManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[313,33] cannot find symbol
+  symbol:   variable webHookController
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[355,34] cannot find symbol
+  symbol:   variable configManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[357,25] cannot find symbol
+  symbol:   variable configManager
+  location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[INFO] 27 errors
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for RuneLite 1.12.7-SNAPSHOT:
+[INFO]
+[INFO] RuneLite ........................................... SUCCESS [  1.707 s]
+[INFO] Cache .............................................. SUCCESS [ 10.420 s]
+[INFO] RuneLite Maven Plugin .............................. SUCCESS [  1.593 s]
+[INFO] RuneLite API ....................................... SUCCESS [ 20.338 s]
+[INFO] RuneLite JShell .................................... SUCCESS [  0.627 s]
+[INFO] RuneLite Client .................................... FAILURE [ 19.738 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  54.576 s
+[INFO] Finished at: 2026-01-29T19:03:35-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.6.1:compile (default-compile) on project client: Compilation failure: Compilation failure:
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[111,35] cannot find symbol
+[ERROR]   symbol:   variable gson
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[123,17] cannot find symbol
+[ERROR]   symbol:   variable clientToolbar
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[124,61] cannot find symbol
+[ERROR]   symbol:   variable copilotLoginController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[124,17] cannot find symbol
+[ERROR]   symbol:   variable apiRequestHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[125,17] cannot find symbol
+[ERROR]   symbol:   variable copilotLoginController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[126,17] cannot find symbol
+[ERROR]   symbol:   variable copilotLoginController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[127,17] cannot find symbol
+[ERROR]   symbol:   variable suggestionController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[128,17] cannot find symbol
+[ERROR]   symbol:   variable suggestionController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[129,17] cannot find symbol
+[ERROR]   symbol:   variable suggestionController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[130,17] cannot find symbol
+[ERROR]   symbol:   variable suggestionController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[131,17] cannot find symbol
+[ERROR]   symbol:   variable grandExchangeCollectHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[145,67] cannot find symbol
+[ERROR]   symbol:   variable accountStatusManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[160,17] cannot find symbol
+[ERROR]   symbol:   variable clientToolbar
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[166,33] cannot find symbol
+[ERROR]   symbol:   variable webHookController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[169,17] cannot find symbol
+[ERROR]   symbol:   variable keybindHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[180,17] cannot find symbol
+[ERROR]   symbol:   variable offerEventHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[186,66] cannot find symbol
+[ERROR]   symbol:   variable grandExchange
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[187,25] cannot find symbol
+[ERROR]   symbol:   variable suggestionManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[195,17] cannot find symbol
+[ERROR]   symbol:   variable suggestionController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[196,17] cannot find symbol
+[ERROR]   symbol:   variable offerEventHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[201,28] cannot find symbol
+[ERROR]   symbol:   variable grandExchange
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[202,17] cannot find symbol
+[ERROR]   symbol:   variable grandExchangeCollectHandler
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[251,33] cannot find symbol
+[ERROR]   symbol:   variable suggestionManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[254,33] cannot find symbol
+[ERROR]   symbol:   variable accountStatusManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[313,33] cannot find symbol
+[ERROR]   symbol:   variable webHookController
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[355,34] cannot find symbol
+[ERROR]   symbol:   variable configManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] /C:/Users/James/Desktop/Axiom/AxiomOfficial/pyosrs/apps/RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/customflippingcopilot/controller/FlippingCopilotPlugin.java:[357,25] cannot find symbol
+[ERROR]   symbol:   variable configManager
+[ERROR]   location: class net.runelite.client.plugins.customflippingcopilot.controller.FlippingCopilotPlugin
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :client
+PS C:\Users\James\Desktop\Axiom\AxiomOfficial\pyosrs\apps\RuneLiteCustom>
