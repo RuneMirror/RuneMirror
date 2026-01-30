@@ -18,10 +18,10 @@ import net.runelite.client.plugins.prushsync.PrushSyncGson;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Prush Guest",
+	name = "RuneMirror Guest",
 	description = "Guest executor for synchronized multi-client control",
 	tags = {"sync"},
-	conflicts = {"Prush Host"}
+	conflicts = {"RuneMirror Host"}
 )
 public class PrushGuestPlugin extends Plugin
 {
@@ -44,19 +44,23 @@ public class PrushGuestPlugin extends Plugin
 	{
 		gson = PrushSyncGson.create();
 		startServer();
-		log.info("[PrushGuest] Started (client={})", client != null ? client.hashCode() : "null");
+		log.info("[RuneMirrorGuest] Started (client={})", client != null ? client.hashCode() : "null");
 	}
 
 	@Override
 	protected void shutDown()
 	{
 		stopServer();
-		log.info("[PrushGuest] Stopped");
+		log.info("[RuneMirrorGuest] Stopped");
 	}
 
 	private int resolveListenPort()
 	{
-		String override = System.getProperty("prush.guest.port");
+		String override = System.getProperty("runemirror.guest.port");
+		if (override == null || override.trim().isEmpty())
+		{
+			override = System.getProperty("prush.guest.port");
+		}
 		if (override != null && !override.trim().isEmpty())
 		{
 			try
@@ -96,7 +100,7 @@ public class PrushGuestPlugin extends Plugin
 		}
 		catch (Exception e)
 		{
-			log.debug("[PrushGuest] Bad json: {}", e.getMessage());
+			log.debug("[RuneMirrorGuest] Bad json: {}", e.getMessage());
 			return;
 		}
 
@@ -157,7 +161,7 @@ public class PrushGuestPlugin extends Plugin
 			}
 			catch (Exception e)
 			{
-				log.debug("[PrushGuest] Exec failed: {}", e.getMessage());
+				log.debug("[RuneMirrorGuest] Exec failed: {}", e.getMessage());
 			}
 		});
 	}
@@ -195,7 +199,7 @@ public class PrushGuestPlugin extends Plugin
 			}
 			catch (Exception e)
 			{
-				log.debug("[PrushGuest] Walk exec failed: {}", e.getMessage());
+				log.debug("[RuneMirrorGuest] Walk exec failed: {}", e.getMessage());
 			}
 		});
 	}
@@ -245,7 +249,7 @@ public class PrushGuestPlugin extends Plugin
 			}
 			catch (Exception e)
 			{
-				log.debug("[PrushGuest] Continue exec failed: {}", e.getMessage());
+				log.debug("[RuneMirrorGuest] Continue exec failed: {}", e.getMessage());
 			}
 		});
 	}

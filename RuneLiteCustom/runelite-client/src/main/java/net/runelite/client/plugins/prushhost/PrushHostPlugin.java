@@ -27,10 +27,10 @@ import net.runelite.client.plugins.prushsync.PrushSyncGson;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Prush Host",
+	name = "RuneMirror Host",
 	description = "Host for synchronized multi-client control",
 	tags = {"sync"},
-	conflicts = {"Prush Guest"}
+	conflicts = {"RuneMirror Guest"}
 )
 public class PrushHostPlugin extends Plugin
 {
@@ -97,7 +97,7 @@ public class PrushHostPlugin extends Plugin
 		{
 			keyManager.registerKeyListener(keyListener);
 		}
-		log.info("[PrushHost] Started (client={})", client != null ? client.hashCode() : "null");
+		log.info("[RuneMirrorHost] Started (client={})", client != null ? client.hashCode() : "null");
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class PrushHostPlugin extends Plugin
 			broadcaster.close();
 			broadcaster = null;
 		}
-		log.info("[PrushHost] Stopped");
+		log.info("[RuneMirrorHost] Stopped");
 	}
 
 	private void reloadTargets()
@@ -138,7 +138,7 @@ public class PrushHostPlugin extends Plugin
 				int idx = s.lastIndexOf(':');
 				if (idx <= 0 || idx >= s.length() - 1)
 				{
-					log.warn("[PrushHost] Invalid guest target '{}'. Expected host:port", s);
+					log.warn("[RuneMirrorHost] Invalid guest target '{}'. Expected host:port", s);
 					continue;
 				}
 
@@ -150,7 +150,7 @@ public class PrushHostPlugin extends Plugin
 				}
 				catch (NumberFormatException e)
 				{
-					log.warn("[PrushHost] Invalid port in guest target '{}'", s);
+					log.warn("[RuneMirrorHost] Invalid port in guest target '{}'", s);
 					continue;
 				}
 

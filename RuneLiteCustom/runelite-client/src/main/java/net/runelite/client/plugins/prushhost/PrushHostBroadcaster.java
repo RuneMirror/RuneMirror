@@ -34,11 +34,11 @@ public class PrushHostBroadcaster
 				s.setTcpNoDelay(true);
 				BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8));
 				conns.add(new GuestConn(addr, s, w));
-				log.info("[PrushHost] Connected guest {}", addr);
+				log.info("[RuneMirrorHost] Connected guest {}", addr);
 			}
 			catch (IOException e)
 			{
-				log.warn("[PrushHost] Failed to connect guest {}: {}", addr, e.getMessage());
+				log.warn("[RuneMirrorHost] Failed to connect guest {}: {}", addr, e.getMessage());
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class PrushHostBroadcaster
 			}
 			catch (IOException e)
 			{
-				log.warn("[PrushHost] Dropping guest {}: {}", c.addr, e.getMessage());
+				log.warn("[RuneMirrorHost] Dropping guest {}: {}", c.addr, e.getMessage());
 				c.close();
 				conns.remove(i);
 			}
