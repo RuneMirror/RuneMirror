@@ -2,12 +2,16 @@ package net.runelite.client.plugins.prushguest;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import java.awt.Canvas;
+import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
@@ -117,13 +121,6 @@ public class PrushGuestPlugin extends Plugin
 			return;
 		}
 
-		int nowTick = client.getTickCount();
-		int lag = nowTick - a.getTick();
-		if (lag > config.maxTickLag())
-		{
-			return;
-		}
-
 		if (a.getType() == PrushActionType.MENU_ACTION)
 		{
 			scheduleMenuAction(a);
@@ -209,6 +206,37 @@ public class PrushGuestPlugin extends Plugin
 		clientThread.invoke(() -> {
 			try
 			{
+				// Most reliable: simulate the actual spacebar keypress on the game canvas.
+				// This matches how you progress dialogue manually and works with press/hold.
+				Canvas canvas = client.getCanvas();
+				if (canvas != null)
+				{
+					long now = System.currentTimeMillis();
+					canvas.dispatchEvent(new KeyEvent(canvas, KeyEvent.KEY_PRESSED, now, 0, KeyEvent.VK_SPACE, ' '));
+					canvas.dispatchEvent(new KeyEvent(canvas, KeyEvent.KEY_RELEASED, now, 0, KeyEvent.VK_SPACE, ' '));
+					return;
+				}
+
+				// Prefer clicking the actual chat continue widget.
+				// This does not depend on mouse position and mirrors "spacebar" behaviour reliably.
+				Widget w = client.getWidget(InterfaceID.ChatBoth.CONTINUE);
+				if (w == null)
+				{
+					w = client.getWidget(InterfaceID.ChatRight.CONTINUE);
+				}
+				if (w == null)
+				{
+					w = client.getWidget(InterfaceID.ChatLeft.CONTINUE);
+				}
+
+				if (w != null)
+				{
+					int componentId = w.getId();
+					client.menuAction(0, 0, MenuAction.WIDGET_CONTINUE, componentId, -1, "", "");
+					return;
+				}
+
+				// Fallback: attempt to find a widget-continue menu entry.
 				MenuEntry[] entries = client.getMenuEntries();
 				if (entries == null || entries.length == 0)
 				{

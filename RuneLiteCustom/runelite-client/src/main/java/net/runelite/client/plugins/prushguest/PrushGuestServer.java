@@ -36,7 +36,7 @@ public class PrushGuestServer
 			return;
 		}
 
-		thread = new Thread(this::runLoop, "PrushGuestServer");
+		thread = new Thread(this::runLoop, "RuneMirrorGuestServer");
 		thread.setDaemon(true);
 		thread.start();
 	}
@@ -46,12 +46,12 @@ public class PrushGuestServer
 		try (ServerSocket ss = new ServerSocket(port))
 		{
 			serverSocket = ss;
-			log.info("[PrushGuest] Listening on {}", port);
+			log.info("[RuneMirrorGuest] Listening on {}", port);
 			while (running.get())
 			{
 				Socket s = ss.accept();
 				s.setTcpNoDelay(true);
-				log.info("[PrushGuest] Host connected from {}", s.getRemoteSocketAddress());
+				log.info("[RuneMirrorGuest] Host connected from {}", s.getRemoteSocketAddress());
 
 				try (BufferedReader r = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8)))
 				{
@@ -67,7 +67,7 @@ public class PrushGuestServer
 				}
 				catch (IOException e)
 				{
-					log.warn("[PrushGuest] Connection ended: {}", e.getMessage());
+					log.warn("[RuneMirrorGuest] Connection ended: {}", e.getMessage());
 				}
 				finally
 				{
@@ -83,7 +83,7 @@ public class PrushGuestServer
 		}
 		catch (IOException e)
 		{
-			log.error("[PrushGuest] Server error on port {}: {}", port, e.getMessage());
+			log.error("[RuneMirrorGuest] Server error on port {}: {}", port, e.getMessage());
 		}
 		finally
 		{

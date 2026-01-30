@@ -3,10 +3,9 @@ package net.runelite.client.plugins.prushhost;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.awt.event.KeyListener;
+import net.runelite.api.coords.LocalPoint;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -70,7 +69,6 @@ public class PrushHostPlugin extends Plugin
 			{
 				return;
 			}
-
 			PrushAction a = new PrushAction();
 			a.setV(PROTOCOL_VERSION);
 			a.setSeq(seq.incrementAndGet());
@@ -181,16 +179,32 @@ public class PrushHostPlugin extends Plugin
 			return;
 		}
 
+		// Mirror walking via world coordinates to avoid differences in scene/minimap parameters between clients.
 		if (actionType == MenuAction.WALK)
 		{
-			WorldPoint wp;
+			WorldPoint wp = null;
 			try
 			{
-				wp = WorldPoint.fromScene(client, me.getParam0(), me.getParam1(), client.getPlane());
+				LocalPoint dest = client.getLocalDestinationLocation();
+				if (dest != null)
+				{
+					wp = WorldPoint.fromLocal(client, dest);
+				}
 			}
-			catch (Exception e)
+			catch (Exception ignored)
 			{
-				return;
+			}
+
+			if (wp == null)
+			{
+				try
+				{
+					wp = WorldPoint.fromScene(client, me.getParam0(), me.getParam1(), client.getPlane());
+				}
+				catch (Exception e)
+				{
+					return;
+				}
 			}
 
 			PrushAction a = new PrushAction();
