@@ -333,7 +333,13 @@ public class ClientUI
 
 			if (OSType.getOSType() == OSType.MacOS)
 			{
-				OSXFullScreenAdapter.install(frame);
+				try
+				{
+					OSXFullScreenAdapter.install(frame);
+				}
+				catch (Throwable ignored)
+				{
+				}
 			}
 
 			frame.setTitle(title);
