@@ -239,7 +239,15 @@ public class PrushHostPlugin extends Plugin
 								menuA.setOption(me.getOption());
 								menuA.setTarget(me.getTarget());
 								broadcaster.broadcast(menuA, gson.toJson(menuA));
-								// Do NOT send WALK_WORLD; rely on guests executing the MENU_ACTION
+								// Also send WALK_WORLD fallback so guests can convert absolute world coords when MENU_ACTION fails
+								try
+								{
+									sendWalkAction(playerWp, fallback);
+								}
+								catch (Exception e)
+								{
+									log.warn("[RuneMirrorHost] Failed to send WALK_WORLD fallback: {}", e.getMessage(), e);
+								}
 								return;
 							}
 
