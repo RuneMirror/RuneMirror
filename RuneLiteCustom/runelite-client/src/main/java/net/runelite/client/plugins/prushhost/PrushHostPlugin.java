@@ -242,6 +242,15 @@ public class PrushHostPlugin extends Plugin
 								menuA.setItemId(me.getItemId());
 								menuA.setOption(me.getOption());
 								menuA.setTarget(me.getTarget());
+								// Attach host worldview + player world for accurate guest reconstruction
+								if (client.getTopLevelWorldView() != null)
+								{
+									menuA.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+									menuA.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+								}
+								menuA.setHostPlayerWorldX(playerWp.getX());
+								menuA.setHostPlayerWorldY(playerWp.getY());
+								menuA.setHostPlayerWorldPlane(playerWp.getPlane());
 								broadcaster.broadcast(menuA, gson.toJson(menuA));
 								// Also send WALK_WORLD fallback so guests can convert absolute world coords when MENU_ACTION fails
 								try
@@ -275,6 +284,14 @@ public class PrushHostPlugin extends Plugin
 							menuADel.setItemId(me.getItemId());
 							menuADel.setOption(me.getOption());
 							menuADel.setTarget(me.getTarget());
+							if (client.getTopLevelWorldView() != null)
+							{
+								menuADel.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+								menuADel.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+							}
+							menuADel.setHostPlayerWorldX(playerWp.getX());
+							menuADel.setHostPlayerWorldY(playerWp.getY());
+							menuADel.setHostPlayerWorldPlane(playerWp.getPlane());
 							broadcaster.broadcast(menuADel, gson.toJson(menuADel));
 							// Also send a reliable absolute world destination so guests can fall back
 							// to world-based conversion if the MENU_ACTION doesn't set a local destination.
@@ -316,6 +333,14 @@ public class PrushHostPlugin extends Plugin
 				menuAImmediate.setItemId(me.getItemId());
 				menuAImmediate.setOption(me.getOption());
 				menuAImmediate.setTarget(me.getTarget());
+				if (client.getTopLevelWorldView() != null)
+				{
+					menuAImmediate.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+					menuAImmediate.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+				}
+				menuAImmediate.setHostPlayerWorldX(playerWp.getX());
+				menuAImmediate.setHostPlayerWorldY(playerWp.getY());
+				menuAImmediate.setHostPlayerWorldPlane(playerWp.getPlane());
 				broadcaster.broadcast(menuAImmediate, gson.toJson(menuAImmediate));
 				// Also send world destination so guests that fail to set local destination can use it.
 				sendWalkAction(playerWp, destWp);
@@ -351,6 +376,19 @@ public class PrushHostPlugin extends Plugin
 		a.setOption(me.getOption());
 		a.setTarget(me.getTarget());
 
+		if (client.getTopLevelWorldView() != null)
+		{
+			a.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+			a.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+		}
+		WorldPoint pw = WorldPoint.fromLocal(client, client.getLocalPlayer().getLocalLocation());
+		if (pw != null)
+		{
+			a.setHostPlayerWorldX(pw.getX());
+			a.setHostPlayerWorldY(pw.getY());
+			a.setHostPlayerWorldPlane(pw.getPlane());
+		}
+
 		String json = gson.toJson(a);
 		broadcaster.broadcast(a, json);
 	}
@@ -378,6 +416,16 @@ public class PrushHostPlugin extends Plugin
 		// Also send relative offsets so guests can compute destination from their own player position.
 		a.setRelDx(dx);
 		a.setRelDy(dy);
+
+		// Attach host worldview + player world for guest reconstruction
+		if (client.getTopLevelWorldView() != null)
+		{
+			a.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+			a.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+		}
+		a.setHostPlayerWorldX(playerWp.getX());
+		a.setHostPlayerWorldY(playerWp.getY());
+		a.setHostPlayerWorldPlane(playerWp.getPlane());
 
 		log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
 			dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());

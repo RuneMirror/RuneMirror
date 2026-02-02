@@ -29,4 +29,11 @@ public class PrushAction
 	// Relative offset from host player to destination (dest - player)
 	private Integer relDx;
 	private Integer relDy;
+
+	// Host worldview base and player world position at the time of the click
+	private Integer hostBaseX;
+	private Integer hostBaseY;
+	private Integer hostPlayerWorldX;
+	private Integer hostPlayerWorldY;
+	private Integer hostPlayerWorldPlane;
 }

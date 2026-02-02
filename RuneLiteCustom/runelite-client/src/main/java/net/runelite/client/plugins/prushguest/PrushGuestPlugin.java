@@ -235,7 +235,44 @@ public class PrushGuestPlugin extends Plugin
 					return;
 				}
 				WorldPoint dest;
-				if (rdx != null && rdy != null)
+				// Prefer host-base reconstruction: if host provided its worldview base and host player world
+				Integer hostBaseX = a.getHostBaseX();
+				Integer hostBaseY = a.getHostBaseY();
+				Integer hostPlayerWx = a.getHostPlayerWorldX();
+				Integer hostPlayerWy = a.getHostPlayerWorldY();
+				Integer hostPlayerWpl = a.getHostPlayerWorldPlane();
+				if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null && a.getParam0() != 0 && a.getParam1() != 0)
+				{
+					// Reconstruct the world point the host clicked using host base + scene coords
+					int sceneX = a.getParam0();
+					int sceneY = a.getParam1();
+					WorldPoint hostClicked = new WorldPoint(hostBaseX + sceneX, hostBaseY + sceneY, hostPlayerWpl == null ? playerWp.getPlane() : hostPlayerWpl);
+					int relx = hostClicked.getX() - hostPlayerWx;
+					int rely = hostClicked.getY() - hostPlayerWy;
+					// Apply the same vector to this guest's player world position
+					dest = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
+					int absDx = Math.abs(relx);
+					int absDy = Math.abs(rely);
+					if (absDx > 128 || absDy > 128)
+					{
+						log.warn("[RuneMirrorGuest] Computed rel vector too large relx={} rely={} — falling back to absolute world coords if available", relx, rely);
+						if (wx != null && wy != null && wp != null)
+						{
+							dest = new WorldPoint(wx, wy, wp);
+							log.info("[RuneMirrorGuest] Using absolute fallback dest world={}", dest);
+						}
+						else
+						{
+							log.warn("[RuneMirrorGuest] No absolute world fallback present; aborting walk_world");
+							return;
+						}
+					}
+					else
+					{
+						log.info("[RuneMirrorGuest] Reconstructed hostClicked={} rel=({}, {}) -> guest dest={}", hostClicked, relx, rely, dest);
+					}
+				}
+				else if (rdx != null && rdy != null)
 				{
 					// Use relative offset from host player: apply to this guest's player world position.
 					dest = new WorldPoint(playerWp.getX() + rdx, playerWp.getY() + rdy, playerWp.getPlane());
