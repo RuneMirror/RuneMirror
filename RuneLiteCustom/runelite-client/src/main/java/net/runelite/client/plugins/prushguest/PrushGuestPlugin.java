@@ -211,9 +211,11 @@ public class PrushGuestPlugin extends Plugin
 		Integer wx = a.getWorldX();
 		Integer wy = a.getWorldY();
 		Integer wp = a.getWorldPlane();
-		if (wx == null || wy == null || wp == null)
+		Integer rdx = a.getRelDx();
+		Integer rdy = a.getRelDy();
+		if ((wx == null || wy == null || wp == null) && (rdx == null || rdy == null))
 		{
-			log.warn("[RuneMirrorGuest] WALK_WORLD missing required fields: wx={} wy={} plane={}", wx, wy, wp);
+			log.warn("[RuneMirrorGuest] WALK_WORLD missing required fields: wx={} wy={} plane={} relDx={} relDy={}", wx, wy, wp, rdx, rdy);
 			return;
 		}
 
@@ -225,15 +227,44 @@ public class PrushGuestPlugin extends Plugin
 					log.warn("[RuneMirrorGuest] WALK_WORLD: localPlayer is null");
 					return;
 				}
-				// Compute destination as the absolute world coordinates sent by the host.
+				// Compute destination using relative offsets if provided, otherwise use absolute world coords.
 				WorldPoint playerWp = client.getLocalPlayer().getWorldLocation();
 				if (playerWp == null)
 				{
 					log.warn("[RuneMirrorGuest] WALK_WORLD: could not get player world location");
 					return;
 				}
-
-				WorldPoint dest = new WorldPoint(wx, wy, wp);
+				WorldPoint dest;
+				if (rdx != null && rdy != null)
+				{
+					// Use relative offset from host player: apply to this guest's player world position.
+					dest = new WorldPoint(playerWp.getX() + rdx, playerWp.getY() + rdy, playerWp.getPlane());
+					// Safety: reject obviously huge offsets (likely bad data) to avoid long teleports.
+					int absDx = Math.abs(rdx);
+					int absDy = Math.abs(rdy);
+					if (absDx > 32 || absDy > 32)
+					{
+						log.warn("[RuneMirrorGuest] WALK_WORLD rel offset too large relDx={} relDy={} — falling back to absolute world coords if available", rdx, rdy);
+						if (wx != null && wy != null && wp != null)
+						{
+							dest = new WorldPoint(wx, wy, wp);
+							log.info("[RuneMirrorGuest] Using absolute fallback dest world={}", dest);
+						}
+						else
+						{
+							log.warn("[RuneMirrorGuest] No absolute world fallback present; aborting walk_world");
+							return;
+						}
+					}
+					else
+					{
+						log.info("[RuneMirrorGuest] WALK_WORLD using relative offset relDx={} relDy={} -> guest dest world={} (player world={},{},{})", rdx, rdy, dest, playerWp.getX(), playerWp.getY(), playerWp.getPlane());
+					}
+				}
+				else
+				{
+					dest = new WorldPoint(wx, wy, wp);
+				}
 
 				// Resolve the WorldView that contains the destination, and convert using that WorldView.
 				net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(dest);

@@ -25,4 +25,8 @@ public class PrushAction
 	private Integer worldX;
 	private Integer worldY;
 	private Integer worldPlane;
+
+	// Relative offset from host player to destination (dest - player)
+	private Integer relDx;
+	private Integer relDy;
 }

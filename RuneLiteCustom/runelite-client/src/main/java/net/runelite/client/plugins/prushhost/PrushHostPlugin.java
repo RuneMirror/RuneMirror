@@ -375,6 +375,9 @@ public class PrushHostPlugin extends Plugin
 		a.setWorldX(destWp.getX());
 		a.setWorldY(destWp.getY());
 		a.setWorldPlane(destWp.getPlane());
+		// Also send relative offsets so guests can compute destination from their own player position.
+		a.setRelDx(dx);
+		a.setRelDy(dy);
 
 		log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
 			dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());
