@@ -219,8 +219,12 @@ public class PrushHostPlugin extends Plugin
 					{
 						int sceneX = me.getParam0();
 						int sceneY = me.getParam1();
-						destWp = WorldPoint.fromScene(client.getTopLevelWorldView(), sceneX, sceneY, client.getTopLevelWorldView().getPlane());
-						log.debug("[RuneMirrorHost] WALK: Using fallback scene coords ({}, {}) -> world {}", sceneX, sceneY, destWp);
+						// Use the client-scoped conversion which accounts for the correct plane/base
+						destWp = WorldPoint.fromScene(client, sceneX, sceneY, client.getPlane());
+						log.debug("[RuneMirrorHost] WALK: Using fallback scene coords ({}, {}) -> world {} (baseX={}, baseY={}, size={}x{})",
+							sceneX, sceneY, destWp,
+							client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
+							client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
 					}
 					catch (Exception e)
 					{
