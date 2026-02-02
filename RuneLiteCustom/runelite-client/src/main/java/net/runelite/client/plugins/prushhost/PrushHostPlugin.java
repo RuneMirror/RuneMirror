@@ -225,7 +225,21 @@ public class PrushHostPlugin extends Plugin
 									sceneX, sceneY, fallback,
 									client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
 									client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
-								sendWalkAction(playerWp, fallback);
+								// Replay the original WALK menu action first so guests can set local destination/view
+								PrushAction menuA = new PrushAction();
+								menuA.setV(PROTOCOL_VERSION);
+								menuA.setSeq(seq.incrementAndGet());
+								menuA.setTick(client.getTickCount());
+								menuA.setType(PrushActionType.MENU_ACTION);
+								menuA.setParam0(me.getParam0());
+								menuA.setParam1(me.getParam1());
+								menuA.setOpcode(MenuAction.WALK.getId());
+								menuA.setIdentifier(me.getIdentifier());
+								menuA.setItemId(me.getItemId());
+								menuA.setOption(me.getOption());
+								menuA.setTarget(me.getTarget());
+								broadcaster.broadcast(menuA, gson.toJson(menuA));
+								// Do NOT send WALK_WORLD; rely on guests executing the MENU_ACTION
 								return;
 							}
 
@@ -236,6 +250,22 @@ public class PrushHostPlugin extends Plugin
 								return;
 							}
 
+							// Replay the original WALK menu action first so guests can set local destination/view
+							PrushAction menuADel = new PrushAction();
+							menuADel.setV(PROTOCOL_VERSION);
+							menuADel.setSeq(seq.incrementAndGet());
+							menuADel.setTick(client.getTickCount());
+							menuADel.setType(PrushActionType.MENU_ACTION);
+							menuADel.setParam0(me.getParam0());
+							menuADel.setParam1(me.getParam1());
+							menuADel.setOpcode(MenuAction.WALK.getId());
+							menuADel.setIdentifier(me.getIdentifier());
+							menuADel.setItemId(me.getItemId());
+							menuADel.setOption(me.getOption());
+							menuADel.setTarget(me.getTarget());
+							broadcaster.broadcast(menuADel, gson.toJson(menuADel));
+							// Also send a reliable absolute world destination so guests can fall back
+							// to world-based conversion if the MENU_ACTION doesn't set a local destination.
 							sendWalkAction(playerWp, destWpDelayed);
 						}
 						catch (Exception e)
@@ -258,21 +288,25 @@ public class PrushHostPlugin extends Plugin
 				int dx = destWp.getX() - playerWp.getX();
 				int dy = destWp.getY() - playerWp.getY();
 
-				PrushAction a = new PrushAction();
-				a.setV(PROTOCOL_VERSION);
-				a.setSeq(seq.incrementAndGet());
-				a.setTick(client.getTickCount());
-				a.setType(PrushActionType.WALK_WORLD);
-				// Send absolute world destination coordinates to the guest.
-				a.setWorldX(destWp.getX());
-				a.setWorldY(destWp.getY());
-				a.setWorldPlane(destWp.getPlane());
-
 				log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
 					dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());
 
-				String json = gson.toJson(a);
-				broadcaster.broadcast(a, json);
+				// Broadcast only the original WALK menu action so guests execute the client-native walk logic
+				PrushAction menuAImmediate = new PrushAction();
+				menuAImmediate.setV(PROTOCOL_VERSION);
+				menuAImmediate.setSeq(seq.incrementAndGet());
+				menuAImmediate.setTick(client.getTickCount());
+				menuAImmediate.setType(PrushActionType.MENU_ACTION);
+				menuAImmediate.setParam0(me.getParam0());
+				menuAImmediate.setParam1(me.getParam1());
+				menuAImmediate.setOpcode(MenuAction.WALK.getId());
+				menuAImmediate.setIdentifier(me.getIdentifier());
+				menuAImmediate.setItemId(me.getItemId());
+				menuAImmediate.setOption(me.getOption());
+				menuAImmediate.setTarget(me.getTarget());
+				broadcaster.broadcast(menuAImmediate, gson.toJson(menuAImmediate));
+				// Also send world destination so guests that fail to set local destination can use it.
+				sendWalkAction(playerWp, destWp);
 			}
 			catch (Exception e)
 			{
@@ -335,5 +369,6 @@ public class PrushHostPlugin extends Plugin
 
 		String json = gson.toJson(a);
 		broadcaster.broadcast(a, json);
+
 	}
 }

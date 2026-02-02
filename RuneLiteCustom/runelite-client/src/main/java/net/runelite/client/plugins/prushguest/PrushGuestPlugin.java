@@ -161,6 +161,43 @@ public class PrushGuestPlugin extends Plugin
 					a.getOption() == null ? "" : a.getOption(),
 					a.getTarget() == null ? "" : a.getTarget()
 				);
+
+					// Verify that the menuAction resulted in a local destination being set.
+					clientThread.invokeLater(() -> {
+						try
+						{
+							net.runelite.api.coords.LocalPoint dest = client.getLocalDestinationLocation();
+							if (dest != null)
+							{
+								log.info("[RuneMirrorGuest] MENU_ACTION resulted in local destination: scene=({}, {})", dest.getSceneX(), dest.getSceneY());
+								return;
+							}
+							// Retry once after a short delay: sometimes the client updates destination a tick later.
+							log.warn("[RuneMirrorGuest] MENU_ACTION did not set local destination; retrying once");
+							client.menuAction(
+								a.getParam0(),
+								a.getParam1(),
+								ma,
+								a.getIdentifier(),
+								a.getItemId(),
+								a.getOption() == null ? "" : a.getOption(),
+								a.getTarget() == null ? "" : a.getTarget()
+							);
+							net.runelite.api.coords.LocalPoint dest2 = client.getLocalDestinationLocation();
+							if (dest2 != null)
+							{
+								log.info("[RuneMirrorGuest] MENU_ACTION retry succeeded: scene=({}, {})", dest2.getSceneX(), dest2.getSceneY());
+							}
+							else
+							{
+								log.warn("[RuneMirrorGuest] MENU_ACTION retry also did not set local destination");
+							}
+						}
+						catch (Exception e)
+						{
+							log.debug("[RuneMirrorGuest] post-menuAction verification failed: {}", e.getMessage());
+						}
+					});
 			}
 			catch (Exception e)
 			{
@@ -198,13 +235,19 @@ public class PrushGuestPlugin extends Plugin
 
 				WorldPoint dest = new WorldPoint(wx, wy, wp);
 
-				// Convert world destination to a LocalPoint in the guest's current world view.
-				net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(client, dest);
+				// Resolve the WorldView that contains the destination, and convert using that WorldView.
+				net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(dest);
+				if (wv == null)
+				{
+					log.warn("[RuneMirrorGuest] WALK_WORLD: no WorldView found for destination {}", dest);
+					return;
+				}
+
+				net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(wv, dest);
 				if (lp == null)
 				{
-					log.warn("[RuneMirrorGuest] WALK_WORLD: destination {} is not in current scene/view; baseX={} baseY={} size={}x{}",
-						dest, client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
-						client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
+					log.warn("[RuneMirrorGuest] WALK_WORLD: destination {} is not in resolved WorldView (id={}) baseX={} baseY={} size={}x{}",
+						dest, wv.getId(), wv.getBaseX(), wv.getBaseY(), wv.getSizeX(), wv.getSizeY());
 					return;
 				}
 
@@ -217,10 +260,10 @@ public class PrushGuestPlugin extends Plugin
 				log.info("[RuneMirrorGuest] WALK_WORLD dest/worldX={} worldY={} relative dx={} dy={} from player world=({}, {}, {}) -> dest world=({}, {}, {}) scene=({}, {})",
 					wx, wy, dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), dest.getX(), dest.getY(), dest.getPlane(), sceneX, sceneY);
 				
-				if (sceneX < 0 || sceneY < 0 || sceneX >= client.getTopLevelWorldView().getSizeX() || sceneY >= client.getTopLevelWorldView().getSizeY())
+				if (sceneX < 0 || sceneY < 0 || sceneX >= wv.getSizeX() || sceneY >= wv.getSizeY())
 				{
-					log.warn("[RuneMirrorGuest] WALK_WORLD: computed scene coords ({}, {}) are out of bounds (size: {}x{})",
-						sceneX, sceneY, client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
+					log.warn("[RuneMirrorGuest] WALK_WORLD: computed scene coords ({}, {}) are out of bounds for WorldView id={} (size: {}x{})",
+						sceneX, sceneY, wv.getId(), wv.getSizeX(), wv.getSizeY());
 					return;
 				}
 
