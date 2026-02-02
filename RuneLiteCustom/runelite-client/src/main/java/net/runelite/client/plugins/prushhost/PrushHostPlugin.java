@@ -217,14 +217,18 @@ public class PrushHostPlugin extends Plugin
 							LocalPoint dl = client.getLocalDestinationLocation();
 							if (dl == null)
 							{
-								// As a last resort, use the menu entry params immediately (best-effort).
+								// As a last resort, compute destination relative to the player's local position
+								// to avoid using the top-level WorldView which can produce distant world coords.
 								int sceneX = me.getParam0();
 								int sceneY = me.getParam1();
-								WorldPoint fallback = WorldPoint.fromScene(client, sceneX, sceneY, client.getPlane());
-								log.info("[RuneMirrorHost] WALK (delayed fallback): Using scene coords ({}, {}) -> world {} (baseX={}, baseY={}, size={}x{})",
-									sceneX, sceneY, fallback,
-									client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
-									client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
+								net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer().getLocalLocation();
+								int playerSceneX = playerLocal.getSceneX();
+								int playerSceneY = playerLocal.getSceneY();
+								int dx = sceneX - playerSceneX;
+								int dy = sceneY - playerSceneY;
+								WorldPoint fallback = new WorldPoint(playerWp.getX() + dx, playerWp.getY() + dy, playerWp.getPlane());
+								log.info("[RuneMirrorHost] WALK (delayed fallback): Using scene coords ({}, {}) relative dx={} dy={} -> world {} (player world={},{},{})",
+									sceneX, sceneY, dx, dy, fallback, playerWp.getX(), playerWp.getY(), playerWp.getPlane());
 								// Replay the original WALK menu action first so guests can set local destination/view
 								PrushAction menuA = new PrushAction();
 								menuA.setV(PROTOCOL_VERSION);
