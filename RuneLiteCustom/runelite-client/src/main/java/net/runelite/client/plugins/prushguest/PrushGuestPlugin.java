@@ -118,8 +118,11 @@ public class PrushGuestPlugin extends Plugin
 		}
 		if (!config.enabled())
 		{
+			log.debug("[RuneMirrorGuest] Received action while guest config disabled: {}", a.getType());
 			return;
 		}
+
+		log.info("[RuneMirrorGuest] Received action: type={} tick={} seq={}", a.getType(), a.getTick(), a.getSeq());
 
 		if (a.getType() == PrushActionType.MENU_ACTION)
 		{
@@ -140,6 +143,9 @@ public class PrushGuestPlugin extends Plugin
 		clientThread.invoke(() -> {
 			try
 			{
+				log.info("[RuneMirrorGuest] Replaying MENU_ACTION opcode={} p0={} p1={} id={} itemId={} opt='{}' tgt='{}'",
+					a.getOpcode(), a.getParam0(), a.getParam1(), a.getIdentifier(), a.getItemId(),
+					a.getOption(), a.getTarget());
 				MenuAction ma = MenuAction.of(a.getOpcode());
 				if (ma == MenuAction.UNKNOWN)
 				{
@@ -170,17 +176,41 @@ public class PrushGuestPlugin extends Plugin
 		Integer wp = a.getWorldPlane();
 		if (wx == null || wy == null || wp == null)
 		{
+			log.warn("[RuneMirrorGuest] WALK_WORLD missing required fields: wx={} wy={} plane={}", wx, wy, wp);
 			return;
 		}
 
 		clientThread.invoke(() -> {
 			try
 			{
+				if (client.getLocalPlayer() == null)
+				{
+					log.warn("[RuneMirrorGuest] WALK_WORLD: localPlayer is null");
+					return;
+				}
+				// Compute destination as the absolute world coordinates sent by the host.
+				WorldPoint playerWp = client.getLocalPlayer().getWorldLocation();
+				if (playerWp == null)
+				{
+					log.warn("[RuneMirrorGuest] WALK_WORLD: could not get player world location");
+					return;
+				}
+
 				WorldPoint dest = new WorldPoint(wx, wy, wp);
-				int sceneX = dest.getX() - client.getTopLevelWorldView().getBaseX();
-				int sceneY = dest.getY() - client.getTopLevelWorldView().getBaseY();
+				int baseX = client.getTopLevelWorldView().getBaseX();
+				int baseY = client.getTopLevelWorldView().getBaseY();
+				int sceneX = dest.getX() - baseX;
+				int sceneY = dest.getY() - baseY;
+				int dx = dest.getX() - playerWp.getX();
+				int dy = dest.getY() - playerWp.getY();
+
+				log.info("[RuneMirrorGuest] WALK_WORLD dest/worldX={} worldY={} relative dx={} dy={} from player world=({}, {}, {}) -> dest world=({}, {}, {}) scene=({}, {})",
+					wx, wy, dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), dest.getX(), dest.getY(), dest.getPlane(), sceneX, sceneY);
+				
 				if (sceneX < 0 || sceneY < 0 || sceneX >= client.getTopLevelWorldView().getSizeX() || sceneY >= client.getTopLevelWorldView().getSizeY())
 				{
+					log.warn("[RuneMirrorGuest] WALK_WORLD: computed scene coords ({}, {}) are out of bounds (size: {}x{})",
+						sceneX, sceneY, client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
 					return;
 				}
 
@@ -196,7 +226,7 @@ public class PrushGuestPlugin extends Plugin
 			}
 			catch (Exception e)
 			{
-				log.debug("[RuneMirrorGuest] Walk exec failed: {}", e.getMessage());
+				log.warn("[RuneMirrorGuest] Walk exec failed: {}", e.getMessage(), e);
 			}
 		});
 	}
@@ -206,18 +236,19 @@ public class PrushGuestPlugin extends Plugin
 		clientThread.invoke(() -> {
 			try
 			{
-				// Most reliable: simulate the actual spacebar keypress on the game canvas.
-				// This matches how you progress dialogue manually and works with press/hold.
+				log.info("[RuneMirrorGuest] scheduleDialogContinue invoked");
+
+				// First, try to simulate the actual spacebar keypress on the game canvas.
 				Canvas canvas = client.getCanvas();
 				if (canvas != null)
 				{
 					long now = System.currentTimeMillis();
+					log.info("[RuneMirrorGuest] Dispatching synthetic spacebar KeyEvent to canvas");
 					canvas.dispatchEvent(new KeyEvent(canvas, KeyEvent.KEY_PRESSED, now, 0, KeyEvent.VK_SPACE, ' '));
 					canvas.dispatchEvent(new KeyEvent(canvas, KeyEvent.KEY_RELEASED, now, 0, KeyEvent.VK_SPACE, ' '));
-					return;
 				}
 
-				// Prefer clicking the actual chat continue widget.
+				// Also try clicking the actual chat continue widget as a backup.
 				// This does not depend on mouse position and mirrors "spacebar" behaviour reliably.
 				Widget w = client.getWidget(InterfaceID.ChatBoth.CONTINUE);
 				if (w == null)
@@ -232,6 +263,7 @@ public class PrushGuestPlugin extends Plugin
 				if (w != null)
 				{
 					int componentId = w.getId();
+					log.info("[RuneMirrorGuest] Found CONTINUE widget id={}, sending WIDGET_CONTINUE", componentId);
 					client.menuAction(0, 0, MenuAction.WIDGET_CONTINUE, componentId, -1, "", "");
 					return;
 				}
@@ -262,8 +294,12 @@ public class PrushGuestPlugin extends Plugin
 
 				if (continueEntry == null)
 				{
+					log.info("[RuneMirrorGuest] No WIDGET_CONTINUE menu entry found; nothing to do");
 					return;
 				}
+
+				log.info("[RuneMirrorGuest] Using fallback WIDGET_CONTINUE menu entry option='{}' target='{}'",
+					continueEntry.getOption(), continueEntry.getTarget());
 
 				client.menuAction(
 					continueEntry.getParam0(),

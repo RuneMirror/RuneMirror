@@ -64,11 +64,13 @@ public class PrushHostPlugin extends Plugin
 		{
 			if (!config.enabled())
 			{
+				log.debug("[RuneMirrorHost] Ignoring keyPressed because host config is disabled");
 				return;
 			}
 
 			if (e.getKeyCode() != KeyEvent.VK_SPACE)
 			{
+				// Only mirror bare spacebar presses for now.
 				return;
 			}
 			PrushAction a = new PrushAction();
@@ -78,6 +80,7 @@ public class PrushHostPlugin extends Plugin
 			a.setType(PrushActionType.DIALOG_CONTINUE);
 
 			String json = gson.toJson(a);
+			log.info("[RuneMirrorHost] Sending DIALOG_CONTINUE action: {}", a);
 			broadcaster.broadcast(a, json);
 		}
 
@@ -166,6 +169,7 @@ public class PrushHostPlugin extends Plugin
 	{
 		if (!config.enabled())
 		{
+			log.debug("[RuneMirrorHost] Ignoring MenuOptionClicked because host config is disabled");
 			return;
 		}
 
@@ -181,47 +185,85 @@ public class PrushHostPlugin extends Plugin
 			return;
 		}
 
-		// Mirror walking via world coordinates to avoid differences in scene/minimap parameters between clients.
+		// Special-case walking: mirror relative step from the local player instead of raw scene coords.
 		if (actionType == MenuAction.WALK)
 		{
-			WorldPoint wp = null;
 			try
 			{
-				LocalPoint dest = client.getLocalDestinationLocation();
-				if (dest != null)
+				if (client.getLocalPlayer() == null)
 				{
-					wp = WorldPoint.fromLocal(client, dest);
-				}
-			}
-			catch (Exception ignored)
-			{
-			}
-
-			if (wp == null)
-			{
-				try
-				{
-					wp = WorldPoint.fromScene(client, me.getParam0(), me.getParam1(), client.getPlane());
-				}
-				catch (Exception e)
-				{
+					log.warn("[RuneMirrorHost] WALK detected but localPlayer is null");
 					return;
 				}
+
+				// Get player's current world position.
+				WorldPoint playerWp = WorldPoint.fromLocal(client, client.getLocalPlayer().getLocalLocation());
+				if (playerWp == null)
+				{
+					log.warn("[RuneMirrorHost] WALK detected but could not get player world position");
+					return;
+				}
+
+				// Try to get destination from LocalDestinationLocation first (most reliable).
+				WorldPoint destWp = null;
+				LocalPoint destLocal = client.getLocalDestinationLocation();
+				if (destLocal != null)
+				{
+					destWp = WorldPoint.fromLocal(client, destLocal);
+				}
+
+				// Fallback: use the menu entry's param0/param1 (scene coordinates).
+				if (destWp == null)
+				{
+					try
+					{
+						int sceneX = me.getParam0();
+						int sceneY = me.getParam1();
+						destWp = WorldPoint.fromScene(client.getTopLevelWorldView(), sceneX, sceneY, client.getTopLevelWorldView().getPlane());
+						log.debug("[RuneMirrorHost] WALK: Using fallback scene coords ({}, {}) -> world {}", sceneX, sceneY, destWp);
+					}
+					catch (Exception e)
+					{
+						log.warn("[RuneMirrorHost] WALK: Could not convert scene coords to world: {}", e.getMessage());
+						return;
+					}
+				}
+
+				if (destWp == null)
+				{
+					log.warn("[RuneMirrorHost] WALK detected but could not determine destination");
+					return;
+				}
+
+				int dx = destWp.getX() - playerWp.getX();
+				int dy = destWp.getY() - playerWp.getY();
+
+				PrushAction a = new PrushAction();
+				a.setV(PROTOCOL_VERSION);
+				a.setSeq(seq.incrementAndGet());
+				a.setTick(client.getTickCount());
+				a.setType(PrushActionType.WALK_WORLD);
+				// Send absolute world destination coordinates to the guest.
+				a.setWorldX(destWp.getX());
+				a.setWorldY(destWp.getY());
+				a.setWorldPlane(destWp.getPlane());
+
+				log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
+					dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());
+
+				String json = gson.toJson(a);
+				broadcaster.broadcast(a, json);
+			}
+			catch (Exception e)
+			{
+				log.warn("[RuneMirrorHost] Failed to build WALK_WORLD action: {}", e.getMessage(), e);
 			}
 
-			PrushAction a = new PrushAction();
-			a.setV(PROTOCOL_VERSION);
-			a.setSeq(seq.incrementAndGet());
-			a.setTick(client.getTickCount());
-			a.setType(PrushActionType.WALK_WORLD);
-			a.setWorldX(wp.getX());
-			a.setWorldY(wp.getY());
-			a.setWorldPlane(wp.getPlane());
-
-			String json = gson.toJson(a);
-			broadcaster.broadcast(a, json);
 			return;
 		}
+
+		log.info("[RuneMirrorHost] Mirroring MENU_ACTION type={} p0={} p1={} id={} itemId={} opt='{}' tgt='{}'",
+			actionType, me.getParam0(), me.getParam1(), me.getIdentifier(), me.getItemId(), me.getOption(), me.getTarget());
 
 		// Do not mirror RuneLite injected actions.
 		if (actionType == MenuAction.RUNELITE || actionType == MenuAction.RUNELITE_OVERLAY || actionType == MenuAction.RUNELITE_OVERLAY_CONFIG
