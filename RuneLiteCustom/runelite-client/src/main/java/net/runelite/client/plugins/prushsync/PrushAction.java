@@ -36,4 +36,8 @@ public class PrushAction
 	private Integer hostPlayerWorldX;
 	private Integer hostPlayerWorldY;
 	private Integer hostPlayerWorldPlane;
+
+	// Host player's scene coordinates (local scene) at time of click
+	private Integer hostPlayerSceneX;
+	private Integer hostPlayerSceneY;
 }

@@ -251,6 +251,13 @@ public class PrushHostPlugin extends Plugin
 								menuA.setHostPlayerWorldX(playerWp.getX());
 								menuA.setHostPlayerWorldY(playerWp.getY());
 								menuA.setHostPlayerWorldPlane(playerWp.getPlane());
+								// host player's scene coordinates
+								net.runelite.api.coords.LocalPoint pl = client.getLocalPlayer().getLocalLocation();
+								if (pl != null)
+								{
+									menuA.setHostPlayerSceneX(pl.getSceneX());
+									menuA.setHostPlayerSceneY(pl.getSceneY());
+								}
 								broadcaster.broadcast(menuA, gson.toJson(menuA));
 								// Also send WALK_WORLD fallback so guests can convert absolute world coords when MENU_ACTION fails
 								try
@@ -292,6 +299,12 @@ public class PrushHostPlugin extends Plugin
 							menuADel.setHostPlayerWorldX(playerWp.getX());
 							menuADel.setHostPlayerWorldY(playerWp.getY());
 							menuADel.setHostPlayerWorldPlane(playerWp.getPlane());
+							net.runelite.api.coords.LocalPoint pld = client.getLocalPlayer().getLocalLocation();
+							if (pld != null)
+							{
+								menuADel.setHostPlayerSceneX(pld.getSceneX());
+								menuADel.setHostPlayerSceneY(pld.getSceneY());
+							}
 							broadcaster.broadcast(menuADel, gson.toJson(menuADel));
 							// Also send a reliable absolute world destination so guests can fall back
 							// to world-based conversion if the MENU_ACTION doesn't set a local destination.
@@ -341,6 +354,12 @@ public class PrushHostPlugin extends Plugin
 				menuAImmediate.setHostPlayerWorldX(playerWp.getX());
 				menuAImmediate.setHostPlayerWorldY(playerWp.getY());
 				menuAImmediate.setHostPlayerWorldPlane(playerWp.getPlane());
+				net.runelite.api.coords.LocalPoint plimm = client.getLocalPlayer().getLocalLocation();
+				if (plimm != null)
+				{
+					menuAImmediate.setHostPlayerSceneX(plimm.getSceneX());
+					menuAImmediate.setHostPlayerSceneY(plimm.getSceneY());
+				}
 				broadcaster.broadcast(menuAImmediate, gson.toJson(menuAImmediate));
 				// Also send world destination so guests that fail to set local destination can use it.
 				sendWalkAction(playerWp, destWp);
@@ -426,6 +445,12 @@ public class PrushHostPlugin extends Plugin
 		a.setHostPlayerWorldX(playerWp.getX());
 		a.setHostPlayerWorldY(playerWp.getY());
 		a.setHostPlayerWorldPlane(playerWp.getPlane());
+		net.runelite.api.coords.LocalPoint pl = client.getLocalPlayer().getLocalLocation();
+		if (pl != null)
+		{
+			a.setHostPlayerSceneX(pl.getSceneX());
+			a.setHostPlayerSceneY(pl.getSceneY());
+		}
 
 		log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
 			dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());
