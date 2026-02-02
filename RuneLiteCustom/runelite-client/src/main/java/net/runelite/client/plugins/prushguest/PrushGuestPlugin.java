@@ -197,10 +197,20 @@ public class PrushGuestPlugin extends Plugin
 				}
 
 				WorldPoint dest = new WorldPoint(wx, wy, wp);
-				int baseX = client.getTopLevelWorldView().getBaseX();
-				int baseY = client.getTopLevelWorldView().getBaseY();
-				int sceneX = dest.getX() - baseX;
-				int sceneY = dest.getY() - baseY;
+
+				// Convert world destination to a LocalPoint in the guest's current world view.
+				net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(client, dest);
+				if (lp == null)
+				{
+					log.warn("[RuneMirrorGuest] WALK_WORLD: destination {} is not in current scene/view; baseX={} baseY={} size={}x{}",
+						dest, client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
+						client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
+					return;
+				}
+
+				int sceneX = lp.getSceneX();
+				int sceneY = lp.getSceneY();
+
 				int dx = dest.getX() - playerWp.getX();
 				int dy = dest.getY() - playerWp.getY();
 
