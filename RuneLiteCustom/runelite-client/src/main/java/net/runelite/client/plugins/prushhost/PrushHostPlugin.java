@@ -205,33 +205,49 @@ public class PrushHostPlugin extends Plugin
 				}
 
 				// Try to get destination from LocalDestinationLocation first (most reliable).
-				WorldPoint destWp = null;
 				LocalPoint destLocal = client.getLocalDestinationLocation();
-				if (destLocal != null)
+				if (destLocal == null)
 				{
-					destWp = WorldPoint.fromLocal(client, destLocal);
+					// Local destination is sometimes set a tick after the MenuOptionClicked event.
+					// Defer building and sending the WALK_WORLD action to the client thread's next tick,
+					// which increases reliability and avoids incorrect fallback scene->world conversion.
+					clientThread.invokeLater(() -> {
+						try
+						{
+							LocalPoint dl = client.getLocalDestinationLocation();
+							if (dl == null)
+							{
+								// As a last resort, use the menu entry params immediately (best-effort).
+								int sceneX = me.getParam0();
+								int sceneY = me.getParam1();
+								WorldPoint fallback = WorldPoint.fromScene(client, sceneX, sceneY, client.getPlane());
+								log.info("[RuneMirrorHost] WALK (delayed fallback): Using scene coords ({}, {}) -> world {} (baseX={}, baseY={}, size={}x{})",
+									sceneX, sceneY, fallback,
+									client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
+									client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
+								sendWalkAction(playerWp, fallback);
+								return;
+							}
+
+							WorldPoint destWpDelayed = WorldPoint.fromLocal(client, dl);
+							if (destWpDelayed == null)
+							{
+								log.warn("[RuneMirrorHost] WALK: delayed destLocal conversion failed");
+								return;
+							}
+
+							sendWalkAction(playerWp, destWpDelayed);
+						}
+						catch (Exception e)
+						{
+							log.warn("[RuneMirrorHost] Failed to build delayed WALK_WORLD action: {}", e.getMessage(), e);
+						}
+					});
+
+					return;
 				}
 
-				// Fallback: use the menu entry's param0/param1 (scene coordinates).
-				if (destWp == null)
-				{
-					try
-					{
-						int sceneX = me.getParam0();
-						int sceneY = me.getParam1();
-						// Use the client-scoped conversion which accounts for the correct plane/base
-						destWp = WorldPoint.fromScene(client, sceneX, sceneY, client.getPlane());
-						log.info("[RuneMirrorHost] WALK: Using fallback scene coords ({}, {}) -> world {} (baseX={}, baseY={}, size={}x{})",
-							sceneX, sceneY, destWp,
-							client.getTopLevelWorldView().getBaseX(), client.getTopLevelWorldView().getBaseY(),
-							client.getTopLevelWorldView().getSizeX(), client.getTopLevelWorldView().getSizeY());
-					}
-					catch (Exception e)
-					{
-						log.warn("[RuneMirrorHost] WALK: Could not convert scene coords to world: {}", e.getMessage());
-						return;
-					}
-				}
+				WorldPoint destWp = WorldPoint.fromLocal(client, destLocal);
 
 				if (destWp == null)
 				{
@@ -297,5 +313,27 @@ public class PrushHostPlugin extends Plugin
 	PrushHostConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(PrushHostConfig.class);
+	}
+
+	private void sendWalkAction(net.runelite.api.coords.WorldPoint playerWp, net.runelite.api.coords.WorldPoint destWp)
+	{
+		int dx = destWp.getX() - playerWp.getX();
+		int dy = destWp.getY() - playerWp.getY();
+
+		PrushAction a = new PrushAction();
+		a.setV(PROTOCOL_VERSION);
+		a.setSeq(seq.incrementAndGet());
+		a.setTick(client.getTickCount());
+		a.setType(PrushActionType.WALK_WORLD);
+		// Send absolute world destination coordinates to the guest.
+		a.setWorldX(destWp.getX());
+		a.setWorldY(destWp.getY());
+		a.setWorldPlane(destWp.getPlane());
+
+		log.info("[RuneMirrorHost] Mirroring WALK as relative step dx={} dy={} from player world=({}, {}, {}) to dest world=({}, {}, {})",
+			dx, dy, playerWp.getX(), playerWp.getY(), playerWp.getPlane(), destWp.getX(), destWp.getY(), destWp.getPlane());
+
+		String json = gson.toJson(a);
+		broadcaster.broadcast(a, json);
 	}
 }
