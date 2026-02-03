@@ -255,6 +255,7 @@ public class PrushGuestPlugin extends Plugin
 						}
 						log.warn("[RuneMirrorGuest] Canvas-click fallback could not resolve destination; giving up");
 					}
+				}
 				catch (Exception e)
 				{
 					log.debug("[RuneMirrorGuest] canvas-click fallback failed: {}", e.getMessage(), e);
