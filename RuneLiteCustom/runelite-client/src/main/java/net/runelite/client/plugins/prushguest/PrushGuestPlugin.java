@@ -47,6 +47,8 @@ public class PrushGuestPlugin extends Plugin
 
 	private Gson gson;
 	private PrushGuestServer server;
+	/** The most recent WALK_WORLD action received from the host (for verification/override) */
+	private volatile PrushAction lastWalkWorldAction;
 
 	@Override
 	protected void startUp()
@@ -186,6 +188,71 @@ public class PrushGuestPlugin extends Plugin
 				if (dest != null)
 				{
 					log.info("[RuneMirrorGuest] MENU_ACTION resulted in local destination on retry: scene=({}, {})", dest.getSceneX(), dest.getSceneY());
+					// If this MENU_ACTION was a WALK and the host also sent a WALK_WORLD for the same tick,
+					// ensure the resulting scene matches the authoritative WALK_WORLD. If not, override it.
+					if (ma == MenuAction.WALK && lastWalkWorldAction != null && lastWalkWorldAction.getTick() == a.getTick())
+					{
+						try
+						{
+							PrushAction w = lastWalkWorldAction;
+							WorldPoint intended = null;
+							Integer hostBaseX = w.getHostBaseX();
+							Integer hostBaseY = w.getHostBaseY();
+							Integer hostPlayerWx = w.getHostPlayerWorldX();
+							Integer hostPlayerWy = w.getHostPlayerWorldY();
+							Integer hostPlayerWpl = w.getHostPlayerWorldPlane();
+							int sceneX = w.getParam0();
+							int sceneY = w.getParam1();
+							if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null)
+							{
+								WorldPoint hostClicked = new WorldPoint(hostBaseX + sceneX, hostBaseY + sceneY, hostPlayerWpl == null ? client.getPlane() : hostPlayerWpl);
+								int relx = hostClicked.getX() - hostPlayerWx;
+								int rely = hostClicked.getY() - hostPlayerWy;
+								WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
+								if (playerWp != null)
+								{
+									intended = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
+								}
+							}
+							else
+							{
+								net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getLocalLocation();
+								int playerSceneX = playerLocal == null ? 0 : playerLocal.getSceneX();
+								int playerSceneY = playerLocal == null ? 0 : playerLocal.getSceneY();
+								int dx = sceneX - playerSceneX;
+								int dy = sceneY - playerSceneY;
+								WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
+								if (playerWp != null)
+								{
+									intended = new WorldPoint(playerWp.getX() + dx, playerWp.getY() + dy, playerWp.getPlane());
+								}
+							}
+
+							if (intended != null)
+							{
+								net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(intended);
+								if (wv != null)
+								{
+									net.runelite.api.coords.LocalPoint lpInt = net.runelite.api.coords.LocalPoint.fromWorld(wv, intended);
+									if (lpInt != null)
+									{
+										if (lpInt.getSceneX() != dest.getSceneX() || lpInt.getSceneY() != dest.getSceneY())
+										{
+											log.info("[RuneMirrorGuest] MENU_ACTION resulted scene=({},{}), but WALK_WORLD intends scene=({},{}). Overriding to authoritative WALK_WORLD.", dest.getSceneX(), dest.getSceneY(), lpInt.getSceneX(), lpInt.getSceneY());
+											client.menuAction(lpInt.getSceneX(), lpInt.getSceneY(), MenuAction.WALK, 0, -1, "Walk here", "");
+											lastWalkWorldAction = null;
+											verifyMenuActionResult(a, ma, Math.min(MAX_MENU_ACTION_RETRIES, 3));
+											return;
+										}
+									}
+								}
+							}
+						}
+						catch (Exception e)
+						{
+							log.debug("[RuneMirrorGuest] override check failed: {}", e.getMessage(), e);
+						}
+					}
 					return;
 				}
 				if (remaining > 1)
@@ -270,6 +337,8 @@ public class PrushGuestPlugin extends Plugin
 
 	private void scheduleWalkWorld(PrushAction a)
 	{
+		// Remember the last WALK_WORLD from host (used to verify/override replayed MENU_ACTIONs)
+		lastWalkWorldAction = a;
 		Integer wx = a.getWorldX();
 		Integer wy = a.getWorldY();
 		Integer wp = a.getWorldPlane();
