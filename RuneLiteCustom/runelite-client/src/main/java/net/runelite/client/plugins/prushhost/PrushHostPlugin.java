@@ -13,6 +13,7 @@ import net.runelite.api.Client;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.callback.ClientThread;
@@ -206,6 +207,54 @@ public class PrushHostPlugin extends Plugin
 				{
 					log.warn("[RuneMirrorHost] WALK detected but could not get player world position");
 					return;
+				}
+
+				// Prefer the selected scene tile (exact click) when available
+				Tile selected = client.getSelectedSceneTile();
+				if (selected != null)
+				{
+					try
+					{
+						WorldPoint destFromTile = selected.getWorldLocation();
+						if (destFromTile != null)
+						{
+							// Replay the original WALK menu action first so guests can set local destination/view
+							PrushAction menuAImmediate = new PrushAction();
+							menuAImmediate.setV(PROTOCOL_VERSION);
+							menuAImmediate.setSeq(seq.incrementAndGet());
+							menuAImmediate.setTick(client.getTickCount());
+							menuAImmediate.setType(PrushActionType.MENU_ACTION);
+							menuAImmediate.setParam0(me.getParam0());
+							menuAImmediate.setParam1(me.getParam1());
+							menuAImmediate.setOpcode(MenuAction.WALK.getId());
+							menuAImmediate.setIdentifier(me.getIdentifier());
+							menuAImmediate.setItemId(me.getItemId());
+							menuAImmediate.setOption(me.getOption());
+							menuAImmediate.setTarget(me.getTarget());
+							if (client.getTopLevelWorldView() != null)
+							{
+								menuAImmediate.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+								menuAImmediate.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+							}
+							menuAImmediate.setHostPlayerWorldX(playerWp.getX());
+							menuAImmediate.setHostPlayerWorldY(playerWp.getY());
+							menuAImmediate.setHostPlayerWorldPlane(playerWp.getPlane());
+							net.runelite.api.coords.LocalPoint plimm = client.getLocalPlayer().getLocalLocation();
+							if (plimm != null)
+							{
+								menuAImmediate.setHostPlayerSceneX(plimm.getSceneX());
+								menuAImmediate.setHostPlayerSceneY(plimm.getSceneY());
+							}
+							broadcaster.broadcast(menuAImmediate, gson.toJson(menuAImmediate));
+							// Also send world destination so guests that fail to set local destination can use it.
+							sendWalkAction(playerWp, destFromTile);
+							return;
+						}
+					}
+					catch (Exception e)
+					{
+						log.warn("[RuneMirrorHost] Failed to use selectedSceneTile fallback: {}", e.getMessage(), e);
+					}
 				}
 
 				// Try to get destination from LocalDestinationLocation first (most reliable).

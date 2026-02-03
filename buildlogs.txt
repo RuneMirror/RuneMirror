@@ -1,74 +1,486 @@
-[INFO] Compiling 1209 source files with javac [forked debug release 11] to target\classes
-[INFO] -------------------------------------------------------------
-[WARNING] COMPILATION WARNING :
-[INFO] -------------------------------------------------------------
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\James\Desktop\RuneMirror> git status --short
+ M RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/prushguest/PrushGuestPlugin.java
+PS C:\Users\James\Desktop\RuneMirror> git add -A
+warning: in the working copy of 'RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/prushguest/PrushGuestPlugin.java', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\James\Desktop\RuneMirror> git commit -m "prush: add MENU_ACTION multi-retry and canvas-click fallback on guest"
+[prush/walk-fallback-fix e204dc1] prush: add MENU_ACTION multi-retry and canvas-click fallback on guest
+ 1 file changed, 100 insertions(+), 39 deletions(-)
+PS C:\Users\James\Desktop\RuneMirror> git push origin prush/walk-fallback-fix
+Enumerating objects: 25, done.
+Counting objects: 100% (25/25), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (13/13), 2.00 KiB | 2.00 MiB/s, done.
+Total 13 (delta 7), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (7/7), completed with 7 local objects.
+To https://github.com/RuneMirror/RuneMirror.git
+   ce8dd34..e204dc1  prush/walk-fallback-fix -> prush/walk-fallback-fix
+PS C:\Users\James\Desktop\RuneMirror> cd runelitecustom
+PS C:\Users\James\Desktop\RuneMirror\runelitecustom> mvn -DskipTests package
+Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] RuneLite                                                           [pom]
+[INFO] Cache                                                              [jar]
+[INFO] RuneLite Maven Plugin                                     [maven-plugin]
+[INFO] RuneLite API                                                       [jar]
+[INFO] RuneLite JShell                                                    [jar]
+[INFO] RuneLite Client                                                    [jar]
+[INFO]
+[INFO] --------------------< net.runelite:runelite-parent >--------------------
+[INFO] Building RuneLite 1.12.7-SNAPSHOT                                  [1/6]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-parent ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-parent ---
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-parent ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] -------------------------< net.runelite:cache >-------------------------
+[INFO] Building Cache 1.12.7-SNAPSHOT                                     [2/6]
+[INFO]   from cache\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- antlr4:4.13.1:antlr4 (process-resources) @ cache ---
+[INFO] No grammars to process
+[INFO] ANTLR 4: Processing source directory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\cache\src\main\antlr4
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ cache ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ cache ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ cache ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ cache ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ cache ---
+[INFO] Copying 6 resources from src\test\resources to target\test-classes
+[INFO] The encoding used to copy filtered properties files have not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO]
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ cache ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ cache ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ cache ---
+[INFO]
+[INFO] --- assembly:3.2.0:single (make-assembly) @ cache ---
+[INFO] Building jar: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\cache\target\cache-1.12.7-SNAPSHOT-jar-with-dependencies.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ cache ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] --- jar:3.2.0:test-jar (default) @ cache ---
+[INFO]
+[INFO] -----------------< net.runelite:runelite-maven-plugin >-----------------
+[INFO] Building RuneLite Maven Plugin 1.12.7-SNAPSHOT                     [3/6]
+[INFO]   from runelite-maven-plugin\pom.xml
+[INFO] ----------------------------[ maven-plugin ]----------------------------
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-maven-plugin ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ runelite-maven-plugin ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-maven-plugin\src\main\resources
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ runelite-maven-plugin ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- plugin:3.6.0:descriptor (default-descriptor) @ runelite-maven-plugin ---
+[INFO] Using 'UTF-8' encoding to read mojo source files.
+[INFO] java-javadoc mojo extractor found 0 mojo descriptor.
+[INFO] java-annotations mojo extractor found 3 mojo descriptors.
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-maven-plugin ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ runelite-maven-plugin ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-maven-plugin\src\test\resources
+[INFO]
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ runelite-maven-plugin ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ runelite-maven-plugin ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ runelite-maven-plugin ---
+[INFO] Building jar: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-maven-plugin\target\runelite-maven-plugin-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-maven-plugin ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] ---------------------< net.runelite:runelite-api >----------------------
+[INFO] Building RuneLite API 1.12.7-SNAPSHOT                              [4/6]
+[INFO]   from runelite-api\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ runelite-api ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:pack-components (pack-components) @ runelite-api ---
+ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
+ANTLR Runtime version 4.11.1 used for parser compilation does not match the current runtime version 4.13.1
+ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
+ANTLR Runtime version 4.11.1 used for parser compilation does not match the current runtime version 4.13.1
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ runelite-api ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-api\src\main\resources
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ runelite-api ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 291 source files with javac [forked debug release 11] to target\classes
 [WARNING] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
-C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\party\messages\PartyChatMessage.java:[29] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\events\ChatboxInput.java:[32] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\events\PrivateMessageInput.java:[29] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\devtools\ScriptInspector.java:[98,1] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\agility\Courses.java:[88,20] non-varargs call of varargs method with inexact argument type for last parameter;
-  cast to WorldPoint for a varargs call
-  cast to WorldPoint[] for a non-varargs call and to suppress this warning
-[INFO] 5 warnings
-[INFO] -------------------------------------------------------------
+C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-api\src\main\java\net\runelite\api\RuneLiteObject.java:[218,18] [dep-ann] deprecated item is not annotated with @Deprecated
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ runelite-api ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ runelite-api ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-api\src\test\resources
+[INFO]
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ runelite-api ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 6 source files with javac [forked debug release 11] to target\test-classes
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ runelite-api ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ runelite-api ---
+[INFO] Building jar: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT.jar
+[INFO]
+[INFO] --- jar:3.2.0:jar (runtime-jar) @ runelite-api ---
+[INFO] Building jar: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-api\target\runelite-api-1.12.7-SNAPSHOT-runtime.jar
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ runelite-api ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] ------------------------< net.runelite:jshell >-------------------------
+[INFO] Building RuneLite JShell 1.12.7-SNAPSHOT                           [5/6]
+[INFO]   from runelite-jshell\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ jshell ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ jshell ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ jshell ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- checkstyle:2.17:check (verify-style) @ jshell ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jshell ---
+[INFO] skip non existing resourceDirectory C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-jshell\src\test\resources
+[INFO]
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ jshell ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ jshell ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.2.0:jar (default-jar) @ jshell ---
+[INFO]
+[INFO] --- javadoc:3.5.0:jar (attach-javadocs) @ jshell ---
+[INFO] Skipping javadoc generation
+[INFO]
+[INFO] ------------------------< net.runelite:client >-------------------------
+[INFO] Building RuneLite Client 1.12.7-SNAPSHOT                           [6/6]
+[INFO]   from runelite-client\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml
+Downloaded from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml (783 B at 1.6 kB/s)
+[INFO]
+[INFO] --- git-commit-id:2.2.6:revision (query-git-info) @ client ---
+[INFO]
+[INFO] --- lombok:1.18.20.0:delombok (default) @ client ---
+[WARNING] Skipping Delombok
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:assemble (assemble) @ client ---
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\BankMainBuild.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\BankpinButtonSetup.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\BankSearchFilter.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatboxInputWidgetBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatDefaultOnKey.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatSend.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatSplitBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ChatTimestamp.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\CombatInterfaceSP.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\DestroyOnOpKey.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ExamineItem.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\fairyrings_sort_update.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\FakeXpDrop.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\FriendsChatSendKick.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\FriendUpdate.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\GeExamineInfoText.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\GELayout.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\IgnoreUpdate.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\LayoutResizableStones.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\MagicSpellbookRedraw.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\null.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\OpenBankSearchInput.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\OptionsPanelZoomMouseListener.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\OptionsPanelZoomUpdater.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\PrivateMessage.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\QuestFilter.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\ScrollWheelZoomHandler.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\SendPrivateMessage.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\SkillTabBuilder.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\SkillTabTotalLevel.rs2asm
+[debug] Assembling C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\scripts\TriggerBankLayout.rs2asm
+[info] Assembled 32 scripts
+[INFO]
+[INFO] --- runelite:1.12.7-SNAPSHOT:build-index (build-index) @ client ---
+[INFO]
+[INFO] --- resources:3.0.2:resources (default-resources) @ client ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 681 resources
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ client ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 1209 source files with javac [forked debug release 11] to target\classes
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[348,18] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[349,18] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[351,22] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[352,18] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[353,18] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[354,18] error: cannot find symbol
-  symbol:   variable me
-  location: class PrushHostPlugin
-[INFO] 6 errors
+[ERROR] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[158,6] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[245,4] error: 'catch' without 'try'
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[170,3] error: 'try' without 'catch', 'finally' or resource declarations
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[254,3] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[255,2] error: ')' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[256,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[256,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[257,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[257,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[263,3] error: illegal start of type
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[263,21] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[267,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[268,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[273,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[274,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[275,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[277,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[280,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[281,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[289,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[290,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[293,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[296,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[297,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[300,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[301,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[302,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[303,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[304,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[305,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[309,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[310,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[311,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[312,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[314,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[315,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[316,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[317,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[320,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[323,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[324,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[328,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[329,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[334,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[341,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[342,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[343,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[346,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[349,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[350,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[354,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[355,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[360,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[365,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[369,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[372,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[373,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[376,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[380,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[381,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[384,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[386,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[387,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[389,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[392,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[396,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[397,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[408,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[412,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[414,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[424,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[425,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[428,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[429,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[430,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[431,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[436,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[439,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[443,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[448,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[449,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[450,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[451,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[455,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[458,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,37] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,45] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[464,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[467,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[473,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[480,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[481,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[486,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[495,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[499,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[501,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[504,1] error: class, interface, or enum expected
+[INFO] 100 errors
 [INFO] -------------------------------------------------------------
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary for RuneLite 1.12.7-SNAPSHOT:
 [INFO]
-[INFO] RuneLite ........................................... SUCCESS [  2.722 s]
-[INFO] Cache .............................................. SUCCESS [  4.706 s]
-[INFO] RuneLite Maven Plugin .............................. SUCCESS [  1.482 s]
-[INFO] RuneLite API ....................................... SUCCESS [ 16.445 s]
-[INFO] RuneLite JShell .................................... SUCCESS [  0.058 s]
-[INFO] RuneLite Client .................................... FAILURE [ 20.049 s]
+[INFO] RuneLite ........................................... SUCCESS [  2.765 s]
+[INFO] Cache .............................................. SUCCESS [  4.748 s]
+[INFO] RuneLite Maven Plugin .............................. SUCCESS [  1.550 s]
+[INFO] RuneLite API ....................................... SUCCESS [ 17.003 s]
+[INFO] RuneLite JShell .................................... SUCCESS [  0.062 s]
+[INFO] RuneLite Client .................................... FAILURE [  7.482 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  45.575 s
-[INFO] Finished at: 2026-02-02T12:06:13-05:00
+[INFO] Total time:  33.897 s
+[INFO] Finished at: 2026-02-03T12:54:44-05:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project client: Compilation failure: Compilation failure:
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[348,18] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[349,18] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[351,22] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[352,18] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[353,18] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[354,18] error: cannot find symbol
-[ERROR]   symbol:   variable me
-[ERROR]   location: class PrushHostPlugin
+[ERROR] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[158,6] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[245,4] error: 'catch' without 'try'
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[170,3] error: 'try' without 'catch', 'finally' or resource declarations
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[254,3] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[255,2] error: ')' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[256,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[256,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[257,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[257,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[263,3] error: illegal start of type
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[263,21] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[267,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[268,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[273,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[274,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[275,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[277,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[280,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[281,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[289,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[290,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[293,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[296,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[297,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[300,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[301,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[302,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[303,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[304,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[305,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[309,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[310,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[311,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[312,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[314,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[315,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[316,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[317,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[320,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[323,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[324,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[328,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[329,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[334,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[341,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[342,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[343,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[346,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[349,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[350,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[354,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[355,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[360,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[365,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[369,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[372,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[373,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[376,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[380,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[381,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[384,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[386,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[387,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[389,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[392,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[396,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[397,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[408,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[412,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[414,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[424,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[425,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[428,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[429,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[430,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[431,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[436,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[439,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[443,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[448,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[449,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[450,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[451,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[455,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[458,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,37] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,45] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[464,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[467,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[473,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[480,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[481,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[486,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[495,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[499,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[501,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[504,1] error: class, interface, or enum expected
 [ERROR] -> [Help 1]
 [ERROR]
 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
@@ -79,4 +491,4 @@ C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\n
 [ERROR]
 [ERROR] After correcting the problems, you can resume the build with the command
 [ERROR]   mvn <args> -rf :client
-PS C:\Users\James\Desktop\RuneMirror\RuneliteCustom>
+PS C:\Users\James\Desktop\RuneMirror\runelitecustom>

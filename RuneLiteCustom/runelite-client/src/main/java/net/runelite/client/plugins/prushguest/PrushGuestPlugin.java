@@ -155,7 +155,20 @@ public class PrushGuestPlugin extends Plugin
 				if (ma == MenuAction.UNKNOWN)
 				{
 					return;
-					});
+				}
+
+				client.menuAction(
+					a.getParam0(),
+					a.getParam1(),
+					ma,
+					a.getIdentifier(),
+					a.getItemId(),
+					a.getOption() == null ? "" : a.getOption(),
+					a.getTarget() == null ? "" : a.getTarget()
+				);
+
+				// Verify across multiple ticks to allow the client to set local destination
+				verifyMenuActionResult(a, ma, MAX_MENU_ACTION_RETRIES);
 			}
 			catch (Exception e)
 			{
