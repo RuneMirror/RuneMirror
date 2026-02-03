@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.Perspective;
+import net.runelite.api.Point;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.coords.WorldPoint;
@@ -30,6 +33,8 @@ import net.runelite.client.plugins.prushsync.PrushSyncGson;
 public class PrushGuestPlugin extends Plugin
 {
 	private static final int PROTOCOL_VERSION = 1;
+	// How many client ticks to wait for menuAction to set a local destination
+	private static final int MAX_MENU_ACTION_RETRIES = 6;
 
 	@Inject
 	private Client client;
@@ -150,54 +155,110 @@ public class PrushGuestPlugin extends Plugin
 				if (ma == MenuAction.UNKNOWN)
 				{
 					return;
-				}
+					});
+			}
+			catch (Exception e)
+			{
+				log.debug("[RuneMirrorGuest] Exec failed: {}", e.getMessage());
+			}
+		});
+	}
 
-				client.menuAction(
-					a.getParam0(),
-					a.getParam1(),
-					ma,
-					a.getIdentifier(),
-					a.getItemId(),
+	private void verifyMenuActionResult(PrushAction a, MenuAction ma, int remaining)
+	{
+		clientThread.invokeLater(() -> {
+			try
+			{
+				net.runelite.api.coords.LocalPoint dest = client.getLocalDestinationLocation();
+				if (dest != null)
+				{
+					log.info("[RuneMirrorGuest] MENU_ACTION resulted in local destination on retry: scene=({}, {})", dest.getSceneX(), dest.getSceneY());
+					return;
+				}
+				if (remaining > 1)
+				{
+					verifyMenuActionResult(a, ma, remaining - 1);
+					return;
+				}
+				// Final attempt: try synthetic canvas click fallback for WALK actions (or scene-based clicks)
+				try
+				{
+					if (a.getOpcode() == MenuAction.WALK.getId())
+					{
+						// Attempt to reconstruct destination world from host-provided context
+						Integer hostBaseX = a.getHostBaseX();
+						Integer hostBaseY = a.getHostBaseY();
+						Integer hostPlayerWx = a.getHostPlayerWorldX();
+						Integer hostPlayerWy = a.getHostPlayerWorldY();
+						Integer hostPlayerWpl = a.getHostPlayerWorldPlane();
+						int sceneX = a.getParam0();
+						int sceneY = a.getParam1();
+						WorldPoint destWp = null;
+						if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null)
+						{
+							WorldPoint hostClicked = new WorldPoint(hostBaseX + sceneX, hostBaseY + sceneY, hostPlayerWpl == null ? client.getPlane() : hostPlayerWpl);
+							int relx = hostClicked.getX() - hostPlayerWx;
+							int rely = hostClicked.getY() - hostPlayerWy;
+							WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
+							if (playerWp != null)
+							{
+								destWp = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
+							}
+						}
+						else
+						{
+							// Fallback: apply scene delta from host to this guest's player scene
+							net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getLocalLocation();
+							int playerSceneX = playerLocal == null ? 0 : playerLocal.getSceneX();
+							int playerSceneY = playerLocal == null ? 0 : playerLocal.getSceneY();
+							int dx = sceneX - playerSceneX;
+							int dy = sceneY - playerSceneY;
+							WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
+							if (playerWp != null)
+							{
+								destWp = new WorldPoint(playerWp.getX() + dx, playerWp.getY() + dy, playerWp.getPlane());
+							}
+						}
+						if (destWp != null)
+						{
+							net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(destWp);
+							if (wv != null)
+							{
+								net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(wv, destWp);
+								if (lp != null)
+								{
+									Point p = Perspective.localToCanvas(client, lp, destWp.getPlane());
+									if (p != null)
+									{
+										Canvas canvas = client.getCanvas();
+										long now = System.currentTimeMillis();
+										canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, now, 0, p.getX(), p.getY(), 1, false));
+										canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, now, 0, p.getX(), p.getY(), 1, false));
+										log.info("[RuneMirrorGuest] Dispatched synthetic canvas click at {} to replicate host WALK", p);
+										return;
+									}
+								}
+							}
+						}
+						log.warn("[RuneMirrorGuest] Canvas-click fallback could not resolve destination; giving up");
+					}
+				catch (Exception e)
+				{
+					log.debug("[RuneMirrorGuest] canvas-click fallback failed: {}", e.getMessage(), e);
+				}
+			}
+			catch (Exception e)
+			{
+				log.debug("[RuneMirrorGuest] verifyMenuActionResult failed: {}", e.getMessage(), e);
+			}
+		});
+	}
 					a.getOption() == null ? "" : a.getOption(),
 					a.getTarget() == null ? "" : a.getTarget()
 				);
 
-					// Verify that the menuAction resulted in a local destination being set.
-					clientThread.invokeLater(() -> {
-						try
-						{
-							net.runelite.api.coords.LocalPoint dest = client.getLocalDestinationLocation();
-							if (dest != null)
-							{
-								log.info("[RuneMirrorGuest] MENU_ACTION resulted in local destination: scene=({}, {})", dest.getSceneX(), dest.getSceneY());
-								return;
-							}
-							// Retry once after a short delay: sometimes the client updates destination a tick later.
-							log.warn("[RuneMirrorGuest] MENU_ACTION did not set local destination; retrying once");
-							client.menuAction(
-								a.getParam0(),
-								a.getParam1(),
-								ma,
-								a.getIdentifier(),
-								a.getItemId(),
-								a.getOption() == null ? "" : a.getOption(),
-								a.getTarget() == null ? "" : a.getTarget()
-							);
-							net.runelite.api.coords.LocalPoint dest2 = client.getLocalDestinationLocation();
-							if (dest2 != null)
-							{
-								log.info("[RuneMirrorGuest] MENU_ACTION retry succeeded: scene=({}, {})", dest2.getSceneX(), dest2.getSceneY());
-							}
-							else
-							{
-								log.warn("[RuneMirrorGuest] MENU_ACTION retry also did not set local destination");
-							}
-						}
-						catch (Exception e)
-						{
-							log.debug("[RuneMirrorGuest] post-menuAction verification failed: {}", e.getMessage());
-						}
-					});
+				// Verify across multiple ticks to allow the client to set local destination
+				verifyMenuActionResult(a, ma, MAX_MENU_ACTION_RETRIES);
 			}
 			catch (Exception e)
 			{
