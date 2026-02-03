@@ -196,15 +196,24 @@ public class PrushGuestPlugin extends Plugin
 						{
 							PrushAction w = lastWalkWorldAction;
 							WorldPoint intended = null;
+							// Prefer absolute world coordinates when available
+							Integer wx = w.getWorldX();
+							Integer wy = w.getWorldY();
+							Integer wp = w.getWorldPlane();
 							Integer hostBaseX = w.getHostBaseX();
 							Integer hostBaseY = w.getHostBaseY();
 							Integer hostPlayerWx = w.getHostPlayerWorldX();
 							Integer hostPlayerWy = w.getHostPlayerWorldY();
 							Integer hostPlayerWpl = w.getHostPlayerWorldPlane();
-							int sceneX = w.getParam0();
-							int sceneY = w.getParam1();
-							if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null)
+							if (wx != null && wy != null && wp != null)
 							{
+								intended = new WorldPoint(wx, wy, wp);
+							}
+							else if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null)
+							{
+								// Fall back to host-base + scene coords if provided
+								int sceneX = w.getParam0();
+								int sceneY = w.getParam1();
 								WorldPoint hostClicked = new WorldPoint(hostBaseX + sceneX, hostBaseY + sceneY, hostPlayerWpl == null ? client.getPlane() : hostPlayerWpl);
 								int relx = hostClicked.getX() - hostPlayerWx;
 								int rely = hostClicked.getY() - hostPlayerWy;
@@ -214,19 +223,18 @@ public class PrushGuestPlugin extends Plugin
 									intended = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
 								}
 							}
-							else
+							else if (w.getRelDx() != null && w.getRelDy() != null)
 							{
-								net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getLocalLocation();
-								int playerSceneX = playerLocal == null ? 0 : playerLocal.getSceneX();
-								int playerSceneY = playerLocal == null ? 0 : playerLocal.getSceneY();
-								int dx = sceneX - playerSceneX;
-								int dy = sceneY - playerSceneY;
+								// Use relative dx/dy (from host) applied to this guest player's world
+								int rdx = w.getRelDx();
+								int rdy = w.getRelDy();
 								WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
 								if (playerWp != null)
 								{
-									intended = new WorldPoint(playerWp.getX() + dx, playerWp.getY() + dy, playerWp.getPlane());
+									intended = new WorldPoint(playerWp.getX() + rdx, playerWp.getY() + rdy, playerWp.getPlane());
 								}
 							}
+							// else: no reliable data to reconstruct intended worldpoint
 
 							if (intended != null)
 							{
@@ -240,7 +248,7 @@ public class PrushGuestPlugin extends Plugin
 										{
 											log.info("[RuneMirrorGuest] MENU_ACTION resulted scene=({},{}), but WALK_WORLD intends scene=({},{}). Overriding to authoritative WALK_WORLD.", dest.getSceneX(), dest.getSceneY(), lpInt.getSceneX(), lpInt.getSceneY());
 											client.menuAction(lpInt.getSceneX(), lpInt.getSceneY(), MenuAction.WALK, 0, -1, "Walk here", "");
-											lastWalkWorldAction = null;
+										// Do not clear lastWalkWorldAction yet; allow verify to re-check and fall back to a
 											verifyMenuActionResult(a, ma, Math.min(MAX_MENU_ACTION_RETRIES, 3));
 											return;
 										}
@@ -265,6 +273,32 @@ public class PrushGuestPlugin extends Plugin
 				{
 					if (a.getOpcode() == MenuAction.WALK.getId())
 					{
+						// Prefer authoritative WALK_WORLD target when deciding on a synthetic fallback
+						if (lastWalkWorldAction != null)
+						{
+							PrushAction w = lastWalkWorldAction;
+							if (w.getWorldX() != null && w.getWorldY() != null && w.getWorldPlane() != null)
+							{
+								WorldPoint intended = new WorldPoint(w.getWorldX(), w.getWorldY(), w.getWorldPlane());
+								net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(intended);
+								if (wv != null)
+								{
+									net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(wv, intended);
+									if (lp != null)
+									{
+										Point p = Perspective.localToCanvas(client, lp, intended.getPlane());
+										if (p != null)
+										{
+											Canvas canvas = client.getCanvas();
+											long now = System.currentTimeMillis();
+											canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, now, 0, p.getX(), p.getY(), 1, false));
+											canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, now, 0, p.getX(), p.getY(), 1, false));
+											log.info("[RuneMirrorGuest] Dispatched synthetic canvas click at {} to replicate host WALK (authoritative WALK_WORLD)", p);
+											return;
+										}
+									}
+								}
+							}
 						// Attempt to reconstruct destination world from host-provided context
 						Integer hostBaseX = a.getHostBaseX();
 						Integer hostBaseY = a.getHostBaseY();
