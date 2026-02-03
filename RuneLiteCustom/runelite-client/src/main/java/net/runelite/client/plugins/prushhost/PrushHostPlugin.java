@@ -36,6 +36,10 @@ import net.runelite.client.plugins.prushsync.PrushSyncGson;
 public class PrushHostPlugin extends Plugin
 {
 	private static final int PROTOCOL_VERSION = 1;
+	// Number of client ticks to wait/retry for LocalDestinationLocation before using fallback
+	private static final int MAX_FALLBACK_RETRIES = 5;
+	// Maximum allowed relative offset (tiles) to advertise to guests; prevents huge teleports
+	private static final int MAX_RELATIVE_CLAMP = 8;
 
 	@Inject
 	private Client client;
@@ -209,113 +213,8 @@ public class PrushHostPlugin extends Plugin
 				if (destLocal == null)
 				{
 					// Local destination is sometimes set a tick after the MenuOptionClicked event.
-					// Defer building and sending the WALK_WORLD action to the client thread's next tick,
-					// which increases reliability and avoids incorrect fallback scene->world conversion.
-					clientThread.invokeLater(() -> {
-						try
-						{
-							LocalPoint dl = client.getLocalDestinationLocation();
-							if (dl == null)
-							{
-								// As a last resort, compute destination relative to the player's local position
-								// to avoid using the top-level WorldView which can produce distant world coords.
-								int sceneX = me.getParam0();
-								int sceneY = me.getParam1();
-								net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer().getLocalLocation();
-								int playerSceneX = playerLocal.getSceneX();
-								int playerSceneY = playerLocal.getSceneY();
-								int dx = sceneX - playerSceneX;
-								int dy = sceneY - playerSceneY;
-								WorldPoint fallback = new WorldPoint(playerWp.getX() + dx, playerWp.getY() + dy, playerWp.getPlane());
-								log.info("[RuneMirrorHost] WALK (delayed fallback): Using scene coords ({}, {}) relative dx={} dy={} -> world {} (player world={},{},{})",
-									sceneX, sceneY, dx, dy, fallback, playerWp.getX(), playerWp.getY(), playerWp.getPlane());
-								// Replay the original WALK menu action first so guests can set local destination/view
-								PrushAction menuA = new PrushAction();
-								menuA.setV(PROTOCOL_VERSION);
-								menuA.setSeq(seq.incrementAndGet());
-								menuA.setTick(client.getTickCount());
-								menuA.setType(PrushActionType.MENU_ACTION);
-								menuA.setParam0(me.getParam0());
-								menuA.setParam1(me.getParam1());
-								menuA.setOpcode(MenuAction.WALK.getId());
-								menuA.setIdentifier(me.getIdentifier());
-								menuA.setItemId(me.getItemId());
-								menuA.setOption(me.getOption());
-								menuA.setTarget(me.getTarget());
-								// Attach host worldview + player world for accurate guest reconstruction
-								if (client.getTopLevelWorldView() != null)
-								{
-									menuA.setHostBaseX(client.getTopLevelWorldView().getBaseX());
-									menuA.setHostBaseY(client.getTopLevelWorldView().getBaseY());
-								}
-								menuA.setHostPlayerWorldX(playerWp.getX());
-								menuA.setHostPlayerWorldY(playerWp.getY());
-								menuA.setHostPlayerWorldPlane(playerWp.getPlane());
-								// host player's scene coordinates
-								net.runelite.api.coords.LocalPoint pl = client.getLocalPlayer().getLocalLocation();
-								if (pl != null)
-								{
-									menuA.setHostPlayerSceneX(pl.getSceneX());
-									menuA.setHostPlayerSceneY(pl.getSceneY());
-								}
-								broadcaster.broadcast(menuA, gson.toJson(menuA));
-								// Also send WALK_WORLD fallback so guests can convert absolute world coords when MENU_ACTION fails
-								try
-								{
-									sendWalkAction(playerWp, fallback);
-								}
-								catch (Exception e)
-								{
-									log.warn("[RuneMirrorHost] Failed to send WALK_WORLD fallback: {}", e.getMessage(), e);
-								}
-								return;
-							}
-
-							WorldPoint destWpDelayed = WorldPoint.fromLocal(client, dl);
-							if (destWpDelayed == null)
-							{
-								log.warn("[RuneMirrorHost] WALK: delayed destLocal conversion failed");
-								return;
-							}
-
-							// Replay the original WALK menu action first so guests can set local destination/view
-							PrushAction menuADel = new PrushAction();
-							menuADel.setV(PROTOCOL_VERSION);
-							menuADel.setSeq(seq.incrementAndGet());
-							menuADel.setTick(client.getTickCount());
-							menuADel.setType(PrushActionType.MENU_ACTION);
-							menuADel.setParam0(me.getParam0());
-							menuADel.setParam1(me.getParam1());
-							menuADel.setOpcode(MenuAction.WALK.getId());
-							menuADel.setIdentifier(me.getIdentifier());
-							menuADel.setItemId(me.getItemId());
-							menuADel.setOption(me.getOption());
-							menuADel.setTarget(me.getTarget());
-							if (client.getTopLevelWorldView() != null)
-							{
-								menuADel.setHostBaseX(client.getTopLevelWorldView().getBaseX());
-								menuADel.setHostBaseY(client.getTopLevelWorldView().getBaseY());
-							}
-							menuADel.setHostPlayerWorldX(playerWp.getX());
-							menuADel.setHostPlayerWorldY(playerWp.getY());
-							menuADel.setHostPlayerWorldPlane(playerWp.getPlane());
-							net.runelite.api.coords.LocalPoint pld = client.getLocalPlayer().getLocalLocation();
-							if (pld != null)
-							{
-								menuADel.setHostPlayerSceneX(pld.getSceneX());
-								menuADel.setHostPlayerSceneY(pld.getSceneY());
-							}
-							broadcaster.broadcast(menuADel, gson.toJson(menuADel));
-							// Also send a reliable absolute world destination so guests can fall back
-							// to world-based conversion if the MENU_ACTION doesn't set a local destination.
-							sendWalkAction(playerWp, destWpDelayed);
-						}
-						catch (Exception e)
-						{
-							log.warn("[RuneMirrorHost] Failed to build delayed WALK_WORLD action: {}", e.getMessage(), e);
-						}
-					});
-
+					// Retry a few times before falling back to a scene-relative computed destination.
+					attemptSendWalkFallback(me, playerWp, MAX_FALLBACK_RETRIES);
 					return;
 				}
 
@@ -416,6 +315,123 @@ public class PrushHostPlugin extends Plugin
 	PrushHostConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(PrushHostConfig.class);
+	}
+
+	/**
+	 * Retry-check for LocalDestinationLocation for a few ticks before sending a scene-relative fallback.
+	 */
+	private void attemptSendWalkFallback(MenuEntry me, WorldPoint playerWp, int remainingAttempts)
+	{
+		clientThread.invokeLater(() -> {
+			try
+			{
+				LocalPoint dl = client.getLocalDestinationLocation();
+				if (dl != null)
+				{
+					WorldPoint destWpDelayed = WorldPoint.fromLocal(client, dl);
+					if (destWpDelayed != null)
+					{
+						// Replay the original WALK menu action first so guests can set local destination/view
+						PrushAction menuADel = new PrushAction();
+						menuADel.setV(PROTOCOL_VERSION);
+						menuADel.setSeq(seq.incrementAndGet());
+						menuADel.setTick(client.getTickCount());
+						menuADel.setType(PrushActionType.MENU_ACTION);
+						menuADel.setParam0(me.getParam0());
+						menuADel.setParam1(me.getParam1());
+						menuADel.setOpcode(MenuAction.WALK.getId());
+						menuADel.setIdentifier(me.getIdentifier());
+						menuADel.setItemId(me.getItemId());
+						menuADel.setOption(me.getOption());
+						menuADel.setTarget(me.getTarget());
+						if (client.getTopLevelWorldView() != null)
+						{
+							menuADel.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+							menuADel.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+						}
+						menuADel.setHostPlayerWorldX(playerWp.getX());
+						menuADel.setHostPlayerWorldY(playerWp.getY());
+						menuADel.setHostPlayerWorldPlane(playerWp.getPlane());
+						net.runelite.api.coords.LocalPoint pld = client.getLocalPlayer().getLocalLocation();
+						if (pld != null)
+						{
+							menuADel.setHostPlayerSceneX(pld.getSceneX());
+							menuADel.setHostPlayerSceneY(pld.getSceneY());
+						}
+						broadcaster.broadcast(menuADel, gson.toJson(menuADel));
+						// Also send a reliable absolute world destination so guests can fall back
+						// to world-based conversion if the MENU_ACTION doesn't set a local destination.
+						sendWalkAction(playerWp, destWpDelayed);
+						return;
+					}
+				}
+				// if we still have attempts left, try again next tick
+				if (remainingAttempts > 1)
+				{
+					attemptSendWalkFallback(me, playerWp, remainingAttempts - 1);
+					return;
+				}
+				// Last attempt: compute scene-relative fallback and clamp the vector.
+				int sceneX = me.getParam0();
+				int sceneY = me.getParam1();
+				net.runelite.api.coords.LocalPoint playerLocal = client.getLocalPlayer().getLocalLocation();
+				int playerSceneX = playerLocal == null ? 0 : playerLocal.getSceneX();
+				int playerSceneY = playerLocal == null ? 0 : playerLocal.getSceneY();
+				int dx = sceneX - playerSceneX;
+				int dy = sceneY - playerSceneY;
+				// Clamp dx/dy to avoid advertising huge relative jumps
+				int clampedDx = Math.max(-MAX_RELATIVE_CLAMP, Math.min(MAX_RELATIVE_CLAMP, dx));
+				int clampedDy = Math.max(-MAX_RELATIVE_CLAMP, Math.min(MAX_RELATIVE_CLAMP, dy));
+				WorldPoint fallback = new WorldPoint(playerWp.getX() + clampedDx, playerWp.getY() + clampedDy, playerWp.getPlane());
+				if (clampedDx != dx || clampedDy != dy)
+				{
+					log.warn("[RuneMirrorHost] Clamped scene-relative fallback dx/dy from ({},{}) to ({},{}) to avoid large teleport", dx, dy, clampedDx, clampedDy);
+				}
+				log.info("[RuneMirrorHost] WALK (final fallback): Using scene coords ({}, {}) relative dx={} dy={} -> world {} (player world={},{},{})",
+					sceneX, sceneY, clampedDx, clampedDy, fallback, playerWp.getX(), playerWp.getY(), playerWp.getPlane());
+				// Replay the original WALK menu action first so guests can set local destination/view
+				PrushAction menuA = new PrushAction();
+				menuA.setV(PROTOCOL_VERSION);
+				menuA.setSeq(seq.incrementAndGet());
+				menuA.setTick(client.getTickCount());
+				menuA.setType(PrushActionType.MENU_ACTION);
+				menuA.setParam0(me.getParam0());
+				menuA.setParam1(me.getParam1());
+				menuA.setOpcode(MenuAction.WALK.getId());
+				menuA.setIdentifier(me.getIdentifier());
+				menuA.setItemId(me.getItemId());
+				menuA.setOption(me.getOption());
+				menuA.setTarget(me.getTarget());
+				if (client.getTopLevelWorldView() != null)
+				{
+					menuA.setHostBaseX(client.getTopLevelWorldView().getBaseX());
+					menuA.setHostBaseY(client.getTopLevelWorldView().getBaseY());
+				}
+				menuA.setHostPlayerWorldX(playerWp.getX());
+				menuA.setHostPlayerWorldY(playerWp.getY());
+				menuA.setHostPlayerWorldPlane(playerWp.getPlane());
+				net.runelite.api.coords.LocalPoint pl = client.getLocalPlayer().getLocalLocation();
+				if (pl != null)
+				{
+					menuA.setHostPlayerSceneX(pl.getSceneX());
+					menuA.setHostPlayerSceneY(pl.getSceneY());
+				}
+				broadcaster.broadcast(menuA, gson.toJson(menuA));
+				// Also send WALK_WORLD fallback so guests can convert absolute world coords when MENU_ACTION fails
+				try
+				{
+					sendWalkAction(playerWp, fallback);
+				}
+				catch (Exception e)
+				{
+					log.warn("[RuneMirrorHost] Failed to send WALK_WORLD fallback: {}", e.getMessage(), e);
+				}
+			}
+			catch (Exception e)
+			{
+				log.warn("[RuneMirrorHost] attemptSendWalkFallback failed: {}", e.getMessage(), e);
+			}
+		});
 	}
 
 	private void sendWalkAction(net.runelite.api.coords.WorldPoint playerWp, net.runelite.api.coords.WorldPoint destWp)

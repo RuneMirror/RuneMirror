@@ -1,0 +1,82 @@
+[INFO] Compiling 1209 source files with javac [forked debug release 11] to target\classes
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING :
+[INFO] -------------------------------------------------------------
+[WARNING] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\party\messages\PartyChatMessage.java:[29] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\events\ChatboxInput.java:[32] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\events\PrivateMessageInput.java:[29] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\devtools\ScriptInspector.java:[98,1] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\agility\Courses.java:[88,20] non-varargs call of varargs method with inexact argument type for last parameter;
+  cast to WorldPoint for a varargs call
+  cast to WorldPoint[] for a non-varargs call and to suppress this warning
+[INFO] 5 warnings
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[348,18] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[349,18] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[351,22] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[352,18] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[353,18] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[354,18] error: cannot find symbol
+  symbol:   variable me
+  location: class PrushHostPlugin
+[INFO] 6 errors
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for RuneLite 1.12.7-SNAPSHOT:
+[INFO]
+[INFO] RuneLite ........................................... SUCCESS [  2.722 s]
+[INFO] Cache .............................................. SUCCESS [  4.706 s]
+[INFO] RuneLite Maven Plugin .............................. SUCCESS [  1.482 s]
+[INFO] RuneLite API ....................................... SUCCESS [ 16.445 s]
+[INFO] RuneLite JShell .................................... SUCCESS [  0.058 s]
+[INFO] RuneLite Client .................................... FAILURE [ 20.049 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  45.575 s
+[INFO] Finished at: 2026-02-02T12:06:13-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project client: Compilation failure: Compilation failure:
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[348,18] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[349,18] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[351,22] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[352,18] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[353,18] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushhost\PrushHostPlugin.java:[354,18] error: cannot find symbol
+[ERROR]   symbol:   variable me
+[ERROR]   location: class PrushHostPlugin
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :client
+PS C:\Users\James\Desktop\RuneMirror\RuneliteCustom>

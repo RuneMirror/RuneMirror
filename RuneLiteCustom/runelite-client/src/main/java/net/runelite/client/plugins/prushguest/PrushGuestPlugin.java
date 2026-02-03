@@ -253,7 +253,7 @@ public class PrushGuestPlugin extends Plugin
 					dest = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
 					int absDx = Math.abs(relx);
 					int absDy = Math.abs(rely);
-					if (absDx > 128 || absDy > 128)
+					if (absDx > 8 || absDy > 8)
 					{
 						log.warn("[RuneMirrorGuest] Computed rel vector too large relx={} rely={} — falling back to absolute world coords if available", relx, rely);
 						if (wx != null && wy != null && wp != null)
@@ -279,7 +279,7 @@ public class PrushGuestPlugin extends Plugin
 					// Safety: reject obviously huge offsets (likely bad data) to avoid long teleports.
 					int absDx = Math.abs(rdx);
 					int absDy = Math.abs(rdy);
-					if (absDx > 32 || absDy > 32)
+					if (absDx > 8 || absDy > 8)
 					{
 						log.warn("[RuneMirrorGuest] WALK_WORLD rel offset too large relDx={} relDy={} — falling back to absolute world coords if available", rdx, rdy);
 						if (wx != null && wy != null && wp != null)
