@@ -47,8 +47,6 @@ public class PrushGuestPlugin extends Plugin
 
 	private Gson gson;
 	private PrushGuestServer server;
-	/** The most recent WALK_WORLD action received from the host (for verification/override) */
-	private volatile PrushAction lastWalkWorldAction;
 
 	@Override
 	protected void startUp()
@@ -188,79 +186,6 @@ public class PrushGuestPlugin extends Plugin
 				if (dest != null)
 				{
 					log.info("[RuneMirrorGuest] MENU_ACTION resulted in local destination on retry: scene=({}, {})", dest.getSceneX(), dest.getSceneY());
-					// If this MENU_ACTION was a WALK and the host also sent a WALK_WORLD for the same tick,
-					// ensure the resulting scene matches the authoritative WALK_WORLD. If not, override it.
-					if (ma == MenuAction.WALK && lastWalkWorldAction != null && lastWalkWorldAction.getTick() == a.getTick())
-					{
-						try
-						{
-							PrushAction w = lastWalkWorldAction;
-							WorldPoint intended = null;
-							// Prefer absolute world coordinates when available
-							Integer wx = w.getWorldX();
-							Integer wy = w.getWorldY();
-							Integer wp = w.getWorldPlane();
-							Integer hostBaseX = w.getHostBaseX();
-							Integer hostBaseY = w.getHostBaseY();
-							Integer hostPlayerWx = w.getHostPlayerWorldX();
-							Integer hostPlayerWy = w.getHostPlayerWorldY();
-							Integer hostPlayerWpl = w.getHostPlayerWorldPlane();
-							if (wx != null && wy != null && wp != null)
-							{
-								intended = new WorldPoint(wx, wy, wp);
-							}
-							else if (hostBaseX != null && hostBaseY != null && hostPlayerWx != null && hostPlayerWy != null)
-							{
-								// Fall back to host-base + scene coords if provided
-								int sceneX = w.getParam0();
-								int sceneY = w.getParam1();
-								WorldPoint hostClicked = new WorldPoint(hostBaseX + sceneX, hostBaseY + sceneY, hostPlayerWpl == null ? client.getPlane() : hostPlayerWpl);
-								int relx = hostClicked.getX() - hostPlayerWx;
-								int rely = hostClicked.getY() - hostPlayerWy;
-								WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
-								if (playerWp != null)
-								{
-									intended = new WorldPoint(playerWp.getX() + relx, playerWp.getY() + rely, playerWp.getPlane());
-								}
-							}
-							else if (w.getRelDx() != null && w.getRelDy() != null)
-							{
-								// Use relative dx/dy (from host) applied to this guest player's world
-								int rdx = w.getRelDx();
-								int rdy = w.getRelDy();
-								WorldPoint playerWp = client.getLocalPlayer() == null ? null : client.getLocalPlayer().getWorldLocation();
-								if (playerWp != null)
-								{
-									intended = new WorldPoint(playerWp.getX() + rdx, playerWp.getY() + rdy, playerWp.getPlane());
-								}
-							}
-							// else: no reliable data to reconstruct intended worldpoint
-
-							if (intended != null)
-							{
-								net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(intended);
-								if (wv != null)
-								{
-									net.runelite.api.coords.LocalPoint lpInt = net.runelite.api.coords.LocalPoint.fromWorld(wv, intended);
-									if (lpInt != null)
-									{
-										if (lpInt.getSceneX() != dest.getSceneX() || lpInt.getSceneY() != dest.getSceneY())
-										{
-											log.info("[RuneMirrorGuest] MENU_ACTION resulted scene=({},{}), but WALK_WORLD intends scene=({},{}). Overriding to authoritative WALK_WORLD.", dest.getSceneX(), dest.getSceneY(), lpInt.getSceneX(), lpInt.getSceneY());
-											client.menuAction(lpInt.getSceneX(), lpInt.getSceneY(), MenuAction.WALK, 0, -1, "Walk here", "");
-										// Do not clear lastWalkWorldAction yet; allow verify to re-check and fall back to a
-											verifyMenuActionResult(a, ma, Math.min(MAX_MENU_ACTION_RETRIES, 3));
-											return;
-										}
-									}
-								}
-							}
-						}
-						catch (Exception e)
-						{
-							log.debug("[RuneMirrorGuest] override check failed: {}", e.getMessage(), e);
-						}
-					}
 					return;
 				}
 				if (remaining > 1)
@@ -273,32 +198,6 @@ public class PrushGuestPlugin extends Plugin
 				{
 					if (a.getOpcode() == MenuAction.WALK.getId())
 					{
-						// Prefer authoritative WALK_WORLD target when deciding on a synthetic fallback
-						if (lastWalkWorldAction != null)
-						{
-							PrushAction w = lastWalkWorldAction;
-							if (w.getWorldX() != null && w.getWorldY() != null && w.getWorldPlane() != null)
-							{
-								WorldPoint intended = new WorldPoint(w.getWorldX(), w.getWorldY(), w.getWorldPlane());
-								net.runelite.api.WorldView wv = client.findWorldViewFromWorldPoint(intended);
-								if (wv != null)
-								{
-									net.runelite.api.coords.LocalPoint lp = net.runelite.api.coords.LocalPoint.fromWorld(wv, intended);
-									if (lp != null)
-									{
-										Point p = Perspective.localToCanvas(client, lp, intended.getPlane());
-										if (p != null)
-										{
-											Canvas canvas = client.getCanvas();
-											long now = System.currentTimeMillis();
-											canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, now, 0, p.getX(), p.getY(), 1, false));
-											canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, now, 0, p.getX(), p.getY(), 1, false));
-											log.info("[RuneMirrorGuest] Dispatched synthetic canvas click at {} to replicate host WALK (authoritative WALK_WORLD)", p);
-											return;
-										}
-									}
-								}
-							}
 						// Attempt to reconstruct destination world from host-provided context
 						Integer hostBaseX = a.getHostBaseX();
 						Integer hostBaseY = a.getHostBaseY();
@@ -369,14 +268,6 @@ public class PrushGuestPlugin extends Plugin
 		});
 	}
 
-	private void scheduleWalkWorld(PrushAction a)
-	{
-		// Remember the last WALK_WORLD from host (used to verify/override replayed MENU_ACTIONs)
-		lastWalkWorldAction = a;
-		Integer wx = a.getWorldX();
-		Integer wy = a.getWorldY();
-		Integer wp = a.getWorldPlane();
-		Integer rdx = a.getRelDx();
 		Integer rdy = a.getRelDy();
 		if ((wx == null || wy == null || wp == null) && (rdx == null || rdy == null))
 		{
