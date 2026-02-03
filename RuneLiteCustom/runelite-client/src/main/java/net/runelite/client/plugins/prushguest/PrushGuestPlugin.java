@@ -268,6 +268,12 @@ public class PrushGuestPlugin extends Plugin
 		});
 	}
 
+	private void scheduleWalkWorld(PrushAction a)
+	{
+		Integer wx = a.getWorldX();
+		Integer wy = a.getWorldY();
+		Integer wp = a.getWorldPlane();
+		Integer rdx = a.getRelDx();
 		Integer rdy = a.getRelDy();
 		if ((wx == null || wy == null || wp == null) && (rdx == null || rdy == null))
 		{

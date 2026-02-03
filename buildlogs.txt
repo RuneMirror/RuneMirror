@@ -6,21 +6,21 @@ Install the latest PowerShell for new features and improvements! https://aka.ms/
 PS C:\Users\James\Desktop\RuneMirror> git add -A
 warning: in the working copy of 'RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/prushguest/PrushGuestPlugin.java', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'RuneLiteCustom/runelite-client/src/main/java/net/runelite/client/plugins/prushhost/PrushHostPlugin.java', LF will be replaced by CRLF the next time Git touches it
-PS C:\Users\James\Desktop\RuneMirror> git commit -m "prush: prefer selectedSceneTile for host WALK clicks"
-[prush/walk-fallback-fix c9f23bf] prush: prefer selectedSceneTile for host WALK clicks
- 3 files changed, 534 insertions(+), 60 deletions(-)
+PS C:\Users\James\Desktop\RuneMirror> git commit -m "prush: prefer selectedSceneTile for host WALK clicks" # if there are pending changes
+[prush/walk-fallback-fix 20465d4] prush: prefer selectedSceneTile for host WALK clicks
+ 1 file changed, 823 insertions(+), 413 deletions(-)
 PS C:\Users\James\Desktop\RuneMirror> git push origin prush/walk-fallback-fix
-Enumerating objects: 30, done.
-Counting objects: 100% (30/30), done.
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
 Delta compression using up to 20 threads
-Compressing objects: 100% (13/13), done.
-Writing objects: 100% (16/16), 9.34 KiB | 9.34 MiB/s, done.
-Total 16 (delta 8), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (8/8), completed with 8 local objects.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 9.12 KiB | 9.12 MiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
 To https://github.com/RuneMirror/RuneMirror.git
-   e204dc1..c9f23bf  prush/walk-fallback-fix -> prush/walk-fallback-fix
+   c9f23bf..20465d4  prush/walk-fallback-fix -> prush/walk-fallback-fix
 PS C:\Users\James\Desktop\RuneMirror> cd 'C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client'
-PS C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client> mvn -DskipTests package
+PS C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client> mvn -DskipTests clean package
 Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
 [INFO] Scanning for projects...
 [INFO]
@@ -29,17 +29,20 @@ Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
 [INFO]   from pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
 Downloading from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-maven-plugin/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-maven-plugin/1.12.7-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.8 kB/s)
+Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-maven-plugin/1.12.7-SNAPSHOT/maven-metadata.xml (1.0 kB at 2.0 kB/s)
 Downloading from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml (608 B at 5.1 kB/s)
+Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml (608 B at 4.2 kB/s)
 Downloading from runelite: https://repo.runelite.net/net/runelite/runelite-api/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite: https://repo.runelite.net/net/runelite/runelite-api/1.12.7-SNAPSHOT/maven-metadata.xml (1.2 kB at 8.2 kB/s)
+Downloaded from runelite: https://repo.runelite.net/net/runelite/runelite-api/1.12.7-SNAPSHOT/maven-metadata.xml (1.2 kB at 8.9 kB/s)
 Downloading from runelite: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml (608 B at 4.7 kB/s)
+Downloaded from runelite: https://repo.runelite.net/net/runelite/runelite-parent/1.12.7-SNAPSHOT/maven-metadata.xml (608 B at 4.0 kB/s)
 Downloading from runelite: https://repo.runelite.net/net/runelite/jshell/1.12.7-SNAPSHOT/maven-metadata.xml
 Downloaded from runelite: https://repo.runelite.net/net/runelite/jshell/1.12.7-SNAPSHOT/maven-metadata.xml (990 B at 7.2 kB/s)
 Downloading from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml (783 B at 6.0 kB/s)
+Downloaded from runelite: https://repo.runelite.net/net/runelite/injected-client/1.12.7-SNAPSHOT/maven-metadata.xml (783 B at 6.3 kB/s)
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ client ---
+[INFO] Deleting C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target
 [INFO]
 [INFO] --- git-commit-id:2.2.6:revision (query-git-info) @ client ---
 [INFO]
@@ -49,8 +52,8 @@ Downloaded from runelite: https://repo.runelite.net/net/runelite/injected-client
 [INFO] --- runelite:1.12.7-SNAPSHOT:assemble (assemble) @ client ---
 Downloading from runelite: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml
 Downloading from runelite-plugins: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml
-Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml (1.4 kB at 12 kB/s)
-Downloaded from runelite: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml (1.4 kB at 8.6 kB/s)
+Downloaded from runelite-plugins: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml (1.4 kB at 9.4 kB/s)
+Downloaded from runelite: https://repo.runelite.net/net/runelite/cache/1.12.7-SNAPSHOT/maven-metadata.xml (1.4 kB at 9.2 kB/s)
 ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
 ANTLR Runtime version 4.11.1 used for parser compilation does not match the current runtime version 4.13.1
 ANTLR Tool version 4.11.1 used for code generation does not match the current runtime version 4.13.1
@@ -97,803 +100,222 @@ ANTLR Runtime version 4.11.1 used for parser compilation does not match the curr
 [INFO] Copying 1 resource
 [INFO]
 [INFO] --- compiler:3.11.0:compile (default-compile) @ client ---
-[INFO] Nothing to compile - all classes are up to date
-[INFO]
-[INFO] --- checkstyle:2.17:check (verify-style) @ client ---
-[INFO]
-[INFO] --- resources:3.0.2:testResources (default-testResources) @ client ---
-[INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] Copying 1 resource
-[INFO]
-[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ client ---
 [INFO] Changes detected - recompiling the module! :source
-[INFO] Compiling 123 source files with javac [forked debug release 11] to target\test-classes
-[INFO] -------------------------------------------------------------
-[WARNING] COMPILATION WARNING :
-[INFO] -------------------------------------------------------------
-[WARNING] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
-C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\menus\TestMenuEntry.java:[53,13] Not generating setItemId(): A method with that name already exists
-[WARNING] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\menus\TestMenuEntry.java:[60,13] Not generating setWorldViewId(): A method with that name already exists
-[INFO] 2 warnings
-[INFO] -------------------------------------------------------------
+[INFO] Compiling 1209 source files with javac [forked debug release 11] to target\classes
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skillcalculator\CalculatorTypeTest.java:[38,45] error: cannot access CalculatorType
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skillcalculator\CalculatorType.class
-    class file is invalid for class net.runelite.client.plugins.skillcalculator.CalculatorType
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\camera\CameraPluginTest.java:[119,41] error: cannot access MouseListener
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\input\MouseListener.class
-    bad RuntimeInvisibleParameterAnnotations attribute: mouseClicked(MouseEvent)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\EmoteClueTest.java:[45,13] error: cannot access EmoteClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\EmoteClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: EmoteClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[48,15] error: cannot access SolvedState
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\SolvedState.class
-    bad RuntimeInvisibleParameterAnnotations attribute: SolvedState
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[49,18] error: cannot access Book
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\Book.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Book
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[49,9] error: cannot access Bookcase
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\Bookcase.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Bookcase(WorldPoint)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[89,34] error: cannot access XpPanel
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpPanel.class
-    class file is invalid for class net.runelite.client.plugins.xptracker.XpPanel
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[89,17] error: cannot access XpPanel
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpPanel.class
-    class file is invalid for class net.runelite.client.plugins.xptracker.XpPanel
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[124,2] error: cannot access XpStateSingle
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpStateSingle.class
-    bad RuntimeInvisibleParameterAnnotations attribute: XpStateSingle
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\HotColdClueTest.java:[35,13] error: cannot access HotColdClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\HotColdClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: HotColdClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[120,2] error: cannot access LightboxSolver
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolver.class
-    bad RuntimeInvisibleParameterAnnotations attribute: LightboxSolver()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[123,25] error: cannot access Combination
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\Combination.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Combination
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[132,2] error: cannot access LightboxSolution
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolution.class
-    bad RuntimeInvisibleParameterAnnotations attribute: flip(Combination)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[154,61] error: cannot access AttackStyle
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\attackstyles\AttackStyle.class
-    bad RuntimeInvisibleParameterAnnotations attribute: AttackStyle
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[192,35] error: cannot access CombatInterface
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$CombatInterface.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: CombatInterface()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[193,35] error: cannot find symbol
-  symbol:   variable CombatInterface
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[238,43] error: cannot access Table
-  bad class file: C:\Users\James\.m2\repository\com\google\guava\guava\23.2-jre\guava-23.2-jre.jar(/com/google/common/collect/Table.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: contains(Object,Object)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[239,14] error: cannot find symbol
-  symbol:   variable CombatInterface
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[241,14] error: cannot find symbol
-  symbol:   variable CombatInterface
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[250,59] error: cannot find symbol
-  symbol:   variable CombatInterface
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[259,59] error: cannot find symbol
-  symbol:   variable CombatInterface
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[113,19] error: cannot access PatchPrediction
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchPrediction.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getProduce()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[130,35] error: cannot access Produce
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\Produce.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Produce
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[130,50] error: cannot access CropState
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\CropState.class
-    bad RuntimeInvisibleParameterAnnotations attribute: CropState
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CrypticClueTest.java:[57,13] error: cannot access CrypticClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CrypticClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: CrypticClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\PatchImplementationTest.java:[42,34] error: cannot access PatchImplementation
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchImplementation.class
-    bad RuntimeInvisibleParameterAnnotations attribute: PatchImplementation
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\PatchImplementationTest.java:[47,4] error: cannot access PatchState
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchState.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getStages()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CoordinateClueTest.java:[56,2] error: cannot access CoordinateClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CoordinateClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: CoordinateClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CoordinateClueTest.java:[88,9] error: cannot access Enemy
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\Enemy.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Enemy
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\playerindicators\PlayerIndicatorsPluginTest.java:[110,40] error: cannot access Decorations
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\playerindicators\PlayerIndicatorsService$Decorations.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getFriendsChatRank()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ChatColorConfigTest.java:[40,44] error: cannot access SecurityException
-  bad class file: /BCDEFG/java.base/java/lang/SecurityException.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: SecurityException()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ChatColorConfigTest.java:[42,39] error: cannot access Executable
-  bad class file: /B/java.base/java/lang/reflect/Executable.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: getDeclaringClass()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[164,31] error: cannot access KillType
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\screenshot\ScreenshotPlugin$KillType.class
-    bad RuntimeInvisibleParameterAnnotations attribute: KillType
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[182,31] error: cannot find symbol
-  symbol:   variable KillType
-  location: class ScreenshotPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[200,31] error: cannot find symbol
-  symbol:   variable KillType
-  location: class ScreenshotPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[251,35] error: cannot access LevelupDisplay
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$LevelupDisplay.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: LevelupDisplay()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[255,79] error: cannot find symbol
-  symbol:   variable LevelupDisplay
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[271,35] error: cannot find symbol
-  symbol:   variable LevelupDisplay
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[275,79] error: cannot find symbol
-  symbol:   variable LevelupDisplay
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[291,35] error: cannot find symbol
-  symbol:   variable LevelupDisplay
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[295,76] error: cannot find symbol
-  symbol:   variable LevelupDisplay
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[311,35] error: cannot access Objectbox
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Objectbox.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: Objectbox()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[315,75] error: cannot find symbol
-  symbol:   variable Objectbox
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[399,35] error: cannot find symbol
-  symbol:   variable Objectbox
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[418,35] error: cannot find symbol
-  symbol:   variable Objectbox
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\hiscore\HiscorePanelTest.java:[45,8] error: cannot access NameAutocompleter
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\hiscore\NameAutocompleter.class
-    bad RuntimeInvisibleParameterAnnotations attribute: NameAutocompleter
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\hiscore\HiscorePanelTest.java:[44,2] error: cannot access NameAutocompleter
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\hiscore\NameAutocompleter.class
-    bad RuntimeInvisibleParameterAnnotations attribute: NameAutocompleter
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\smelting\SmeltingPluginTest.java:[80,2] error: cannot access SmeltingSession
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\smelting\SmeltingSession.class
-    bad RuntimeInvisibleParameterAnnotations attribute: SmeltingSession()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\KeybindTest.java:[47,2] error: cannot access Keybind
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\Keybind.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Keybind
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\fishing\FishingPluginTest.java:[92,40] error: cannot access FishingSession
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\fishing\FishingSession.class
-    bad RuntimeInvisibleParameterAnnotations attribute: FishingSession()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\bank\BankPluginTest.java:[147,8] error: cannot access ContainerPrices
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\bank\ContainerPrices.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getGePrice()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[79,37] error: cannot access URI
-  bad class file: /9ABCDEFG/java.base/java/net/URI.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: URI(String)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[94,13] error: cannot access Index
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\emojis\EmojiPlugin$Index.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getNames()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[94,43] error: cannot find symbol
-  symbol:   class Index
-  location: class EmojiPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\game\ItemStatsTest.java:[40,49] error: cannot access ItemStats
-  bad class file: C:\Users\James\.m2\repository\net\runelite\arn\http-api\1.2.21\http-api-1.2.21.jar(/net/runelite/http/api/item/ItemStats.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: subtract(ItemStats)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\hotcold\BeginnerHotColdLocationTest.java:[46,57] error: cannot access Rectangle
-  bad class file: /BCDEF/java.desktop/java/awt/Rectangle.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: Rectangle()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CipherClueTest.java:[51,13] error: cannot access CipherClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CipherClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: CipherClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cooking\CookingPluginTest.java:[113,2] error: cannot access CookingSession
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cooking\CookingSession.class
-    bad RuntimeInvisibleParameterAnnotations attribute: CookingSession()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cooking\CookingPluginTest.java:[132,40] error: cannot access FermentTimer
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cooking\FermentTimer.class
-    bad RuntimeInvisibleParameterAnnotations attribute: FermentTimer
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\ConfigKeyTest.java:[47,18] error: cannot access SkillChallengeClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\SkillChallengeClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: SkillChallengeClue
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\discord\DiscordStateTest.java:[95,28] error: cannot access DiscordGameEventType
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\discord\DiscordGameEventType.class
-    class file is invalid for class net.runelite.client.plugins.discord.DiscordGameEventType
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[38] error: cannot access LoggerFactory
-  bad class file: C:\Users\James\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar(/org/slf4j/LoggerFactory.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: LoggerFactory()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[44,2] error: cannot access Skybox
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skybox\Skybox.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Skybox
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[56,24] error: cannot access SkyboxPlugin
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skybox\SkyboxPlugin.class
-    bad RuntimeInvisibleParameterAnnotations attribute: SkyboxPlugin()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[61,5] error: cannot access Marker
-  bad class file: C:\Users\James\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar(/org/slf4j/Marker.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: getName()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[71,10] error: cannot access ImageOutputStream
-  bad class file: /BCDEFG/java.desktop/javax/imageio/stream/ImageOutputStream.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: write(int)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[100,16] error: cannot access Lock
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ProfileManager$Lock.class
-    bad RuntimeInvisibleParameterAnnotations attribute: Lock()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[100,48] error: cannot find symbol
-  symbol:   class Lock
-  location: class ProfileManager
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[104,3] error: cannot access ConfigProfile
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ConfigProfile.class
-    bad RuntimeInvisibleParameterAnnotations attribute: isInternal()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[152,2] error: cannot access ConfigDescriptor
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ConfigDescriptor.class
-    bad RuntimeInvisibleParameterAnnotations attribute: ConfigDescriptor(ConfigGroup,Collection<ConfigSectionDescriptor>,Collection<ConfigItemDescriptor>)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[145,2] error: cannot access SavedOffer
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\SavedOffer.class
-    bad RuntimeInvisibleParameterAnnotations attribute: getItemId()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[152,79] error: cannot access JsonElement
-  bad class file: C:\Users\James\.m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar(/com/google/gson/JsonElement.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: JsonElement()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[252,2] error: cannot access GrandExchangePanel
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\GrandExchangePanel.class
-    bad RuntimeInvisibleParameterAnnotations attribute: GrandExchangePanel(GrandExchangeSearchPanel,GrandExchangeOffersPanel)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[253,47] error: cannot access GrandExchangeOffersPanel
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\GrandExchangeOffersPanel.class
-    bad RuntimeInvisibleParameterAnnotations attribute: GrandExchangeOffersPanel(GrandExchangePlugin)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\mining\MiningAnimationTest.java:[35,18] error: cannot access MiningAnimation
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\mining\MiningAnimation.class
-    bad RuntimeInvisibleParameterAnnotations attribute: MiningAnimation
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\chat\ChatMessageManagerTest.java:[184,11] error: cannot access ChatColorType
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\chat\ChatColorType.class
-    bad RuntimeInvisibleParameterAnnotations attribute: ChatColorType
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\chat\ChatMessageManagerTest.java:[171,27] error: cannot access ChatMessageBuilder
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\chat\ChatMessageBuilder.class
-    bad RuntimeInvisibleParameterAnnotations attribute: ChatMessageBuilder()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\ui\FontManagerTest.java:[35,16] error: cannot access FontManager
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\ui\FontManager.class
-    bad RuntimeInvisibleParameterAnnotations attribute: FontManager
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\ClueScrollPluginTest.java:[150,35] error: cannot access TrailCluetext
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$TrailCluetext.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: TrailCluetext()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\ClueScrollPluginTest.java:[214,35] error: cannot find symbol
-  symbol:   variable TrailCluetext
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[200,43] error: cannot access BiPredicate
-  bad class file: /BCDEF/java.base/java/util/function/BiPredicate.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: test(T,U)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-  where T,U are type-variables:
-    T extends Object declared in class BiPredicate
-    U extends Object declared in class BiPredicate
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[939,35] error: cannot access Collection
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Collection.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: Collection()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[950,35] error: cannot find symbol
-  symbol:   variable Collection
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[976,35] error: cannot find symbol
-  symbol:   variable Collection
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[987,35] error: cannot find symbol
-  symbol:   variable Collection
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1010,35] error: cannot find symbol
-  symbol:   variable Collection
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1021,35] error: cannot find symbol
-  symbol:   variable Collection
-  location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1225,35] error: cannot access Menu
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Menu.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: Menu()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1228,35] error: cannot access Journalscroll
-  bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Journalscroll.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: Journalscroll()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\ThreeStepCrypticClueTest.java:[53,13] error: cannot access ThreeStepCrypticClue
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\ThreeStepCrypticClue.class
-    bad RuntimeInvisibleParameterAnnotations attribute: forText(String,String)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\loottracker\LootTrackerPluginTest.java:[258,49] error: cannot access LootTrackerPriceType
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\loottracker\LootTrackerPriceType.class
-    bad RuntimeInvisibleParameterAnnotations attribute: LootTrackerPriceType
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[80,75] error: cannot access MockSettings
-  bad class file: C:\Users\James\.m2\repository\org\mockito\mockito-core\3.1.0\mockito-core-3.1.0.jar(/org/mockito/MockSettings.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: extraInterfaces(Class<?>...)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[80,33] error: cannot access MockSettings
-  bad class file: C:\Users\James\.m2\repository\org\mockito\mockito-core\3.1.0\mockito-core-3.1.0.jar(/org/mockito/MockSettings.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: extraInterfaces(Class<?>...)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[92,46] error: cannot access Builder
-  bad class file: C:\Users\James\.m2\repository\com\squareup\okhttp3\okhttp\3.14.9\okhttp-3.14.9.jar(/okhttp3/OkHttpClient$Builder.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: Builder()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[110,3] error: cannot access AbstractModule
-  bad class file: C:\Users\James\.m2\repository\com\google\inject\guice\4.1.0\guice-4.1.0-no_aop.jar(/com/google/inject/AbstractModule.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: AbstractModule()
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[121,67] error: cannot access ClassLoader
-  bad class file: /9ABCDEFG/java.base/java/lang/ClassLoader.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: ClassLoader(ClassLoader)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[121,36] error: cannot access ClassLoader
-  bad class file: /9ABCDEFG/java.base/java/lang/ClassLoader.sig
-    bad RuntimeInvisibleParameterAnnotations attribute: ClassLoader(ClassLoader)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[124,29] error: cannot access ResourceInfo
-  bad class file: C:\Users\James\.m2\repository\com\google\guava\guava\23.2-jre\guava-23.2-jre.jar(/com/google/common/reflect/ClassPath$ResourceInfo.class)
-    bad RuntimeInvisibleParameterAnnotations attribute: of(String,ClassLoader)
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[142,26] error: cannot access PluginManager
-  bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\PluginManager.class
-    bad RuntimeInvisibleParameterAnnotations attribute: PluginManager
-    Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[164,35] error: no suitable method found for createInjector(GraphvizModule)
-    method Guice.createInjector(Module...) is not applicable
-      (varargs mismatch; GraphvizModule cannot be converted to Module)
-    method Guice.createInjector(Iterable<? extends Module>) is not applicable
-      (argument mismatch; GraphvizModule cannot be converted to Iterable<? extends Module>)
-    method Guice.createInjector(Stage,Module...) is not applicable
-      (argument mismatch; GraphvizModule cannot be converted to Stage)
+[ERROR] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[258,4] error: 'catch' without 'try'
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[183,3] error: 'try' without 'catch', 'finally' or resource declarations
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[267,3] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[268,2] error: ')' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[269,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[269,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[270,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[270,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,3] error: illegal start of type
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,21] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[280,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[281,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[286,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[287,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[288,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[289,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[290,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[293,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[294,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[302,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[303,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[306,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[309,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[310,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[313,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[314,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[315,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[316,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[317,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[318,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[322,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[323,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[324,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[325,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[327,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[328,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[329,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[330,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[333,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[336,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[337,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[341,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[342,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[347,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[354,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[355,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[356,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[359,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[362,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[363,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[367,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[368,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[373,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[378,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[382,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[385,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[386,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[389,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[393,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[394,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[397,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[399,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[400,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[402,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[405,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[409,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[410,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[421,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[425,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[427,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[437,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[438,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[441,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[442,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[443,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[444,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[449,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[452,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[456,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[462,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[463,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[464,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[468,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[471,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,37] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,45] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[477,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[480,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[486,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[487,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[493,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[494,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[499,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[508,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[512,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[514,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[517,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[519,55] error: <identifier> expected
 [INFO] 100 errors
 [INFO] -------------------------------------------------------------
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  13.290 s
-[INFO] Finished at: 2026-02-03T13:00:57-05:00
+[INFO] Total time:  11.514 s
+[INFO] Finished at: 2026-02-03T13:08:16-05:00
 [INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:testCompile (default-testCompile) on project client: Compilation failure: Compilation failure:
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skillcalculator\CalculatorTypeTest.java:[38,45] error: cannot access CalculatorType
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skillcalculator\CalculatorType.class
-[ERROR]     class file is invalid for class net.runelite.client.plugins.skillcalculator.CalculatorType
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\camera\CameraPluginTest.java:[119,41] error: cannot access MouseListener
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\input\MouseListener.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: mouseClicked(MouseEvent)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\EmoteClueTest.java:[45,13] error: cannot access EmoteClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\EmoteClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: EmoteClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[48,15] error: cannot access SolvedState
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\SolvedState.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: SolvedState
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[49,18] error: cannot access Book
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\Book.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Book
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\kourendlibrary\LibraryTest.java:[49,9] error: cannot access Bookcase
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\kourendlibrary\Bookcase.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Bookcase(WorldPoint)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[89,34] error: cannot access XpPanel
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpPanel.class
-[ERROR]     class file is invalid for class net.runelite.client.plugins.xptracker.XpPanel
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[89,17] error: cannot access XpPanel
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpPanel.class
-[ERROR]     class file is invalid for class net.runelite.client.plugins.xptracker.XpPanel
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\xptracker\XpTrackerPluginTest.java:[124,2] error: cannot access XpStateSingle
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\xptracker\XpStateSingle.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: XpStateSingle
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\HotColdClueTest.java:[35,13] error: cannot access HotColdClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\HotColdClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: HotColdClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[120,2] error: cannot access LightboxSolver
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolver.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: LightboxSolver()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[123,25] error: cannot access Combination
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\Combination.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Combination
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolverTest.java:[132,2] error: cannot access LightboxSolution
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\puzzlesolver\lightbox\LightboxSolution.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: flip(Combination)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[154,61] error: cannot access AttackStyle
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\attackstyles\AttackStyle.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: AttackStyle
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[192,35] error: cannot access CombatInterface
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$CombatInterface.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CombatInterface()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[193,35] error: cannot find symbol
-[ERROR]   symbol:   variable CombatInterface
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[238,43] error: cannot access Table
-[ERROR]   bad class file: C:\Users\James\.m2\repository\com\google\guava\guava\23.2-jre\guava-23.2-jre.jar(/com/google/common/collect/Table.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: contains(Object,Object)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[239,14] error: cannot find symbol
-[ERROR]   symbol:   variable CombatInterface
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[241,14] error: cannot find symbol
-[ERROR]   symbol:   variable CombatInterface
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[250,59] error: cannot find symbol
-[ERROR]   symbol:   variable CombatInterface
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\attackstyles\AttackStylesPluginTest.java:[259,59] error: cannot find symbol
-[ERROR]   symbol:   variable CombatInterface
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[113,19] error: cannot access PatchPrediction
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchPrediction.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getProduce()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[130,35] error: cannot access Produce
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\Produce.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Produce
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\FarmingContractManagerTest.java:[130,50] error: cannot access CropState
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\CropState.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CropState
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CrypticClueTest.java:[57,13] error: cannot access CrypticClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CrypticClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CrypticClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\PatchImplementationTest.java:[42,34] error: cannot access PatchImplementation
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchImplementation.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: PatchImplementation
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\timetracking\farming\PatchImplementationTest.java:[47,4] error: cannot access PatchState
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\timetracking\farming\PatchState.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getStages()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CoordinateClueTest.java:[56,2] error: cannot access CoordinateClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CoordinateClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CoordinateClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CoordinateClueTest.java:[88,9] error: cannot access Enemy
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\Enemy.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Enemy
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\playerindicators\PlayerIndicatorsPluginTest.java:[110,40] error: cannot access Decorations
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\playerindicators\PlayerIndicatorsService$Decorations.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getFriendsChatRank()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ChatColorConfigTest.java:[40,44] error: cannot access SecurityException
-[ERROR]   bad class file: /BCDEFG/java.base/java/lang/SecurityException.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: SecurityException()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ChatColorConfigTest.java:[42,39] error: cannot access Executable
-[ERROR]   bad class file: /B/java.base/java/lang/reflect/Executable.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getDeclaringClass()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[164,31] error: cannot access KillType
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\screenshot\ScreenshotPlugin$KillType.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: KillType
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[182,31] error: cannot find symbol
-[ERROR]   symbol:   variable KillType
-[ERROR]   location: class ScreenshotPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[200,31] error: cannot find symbol
-[ERROR]   symbol:   variable KillType
-[ERROR]   location: class ScreenshotPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[251,35] error: cannot access LevelupDisplay
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$LevelupDisplay.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: LevelupDisplay()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[255,79] error: cannot find symbol
-[ERROR]   symbol:   variable LevelupDisplay
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[271,35] error: cannot find symbol
-[ERROR]   symbol:   variable LevelupDisplay
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[275,79] error: cannot find symbol
-[ERROR]   symbol:   variable LevelupDisplay
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[291,35] error: cannot find symbol
-[ERROR]   symbol:   variable LevelupDisplay
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[295,76] error: cannot find symbol
-[ERROR]   symbol:   variable LevelupDisplay
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[311,35] error: cannot access Objectbox
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Objectbox.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Objectbox()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[315,75] error: cannot find symbol
-[ERROR]   symbol:   variable Objectbox
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[399,35] error: cannot find symbol
-[ERROR]   symbol:   variable Objectbox
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\screenshot\ScreenshotPluginTest.java:[418,35] error: cannot find symbol
-[ERROR]   symbol:   variable Objectbox
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\hiscore\HiscorePanelTest.java:[45,8] error: cannot access NameAutocompleter
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\hiscore\NameAutocompleter.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: NameAutocompleter
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\hiscore\HiscorePanelTest.java:[44,2] error: cannot access NameAutocompleter
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\hiscore\NameAutocompleter.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: NameAutocompleter
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\smelting\SmeltingPluginTest.java:[80,2] error: cannot access SmeltingSession
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\smelting\SmeltingSession.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: SmeltingSession()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\KeybindTest.java:[47,2] error: cannot access Keybind
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\Keybind.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Keybind
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\fishing\FishingPluginTest.java:[92,40] error: cannot access FishingSession
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\fishing\FishingSession.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: FishingSession()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\bank\BankPluginTest.java:[147,8] error: cannot access ContainerPrices
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\bank\ContainerPrices.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getGePrice()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[79,37] error: cannot access URI
-[ERROR]   bad class file: /9ABCDEFG/java.base/java/net/URI.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: URI(String)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[94,13] error: cannot access Index
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\emojis\EmojiPlugin$Index.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getNames()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\emojis\EmojiPluginTest.java:[94,43] error: cannot find symbol
-[ERROR]   symbol:   class Index
-[ERROR]   location: class EmojiPlugin
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\game\ItemStatsTest.java:[40,49] error: cannot access ItemStats
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\arn\http-api\1.2.21\http-api-1.2.21.jar(/net/runelite/http/api/item/ItemStats.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: subtract(ItemStats)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\hotcold\BeginnerHotColdLocationTest.java:[46,57] error: cannot access Rectangle
-[ERROR]   bad class file: /BCDEF/java.desktop/java/awt/Rectangle.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Rectangle()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\CipherClueTest.java:[51,13] error: cannot access CipherClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\CipherClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CipherClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cooking\CookingPluginTest.java:[113,2] error: cannot access CookingSession
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cooking\CookingSession.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: CookingSession()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cooking\CookingPluginTest.java:[132,40] error: cannot access FermentTimer
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cooking\FermentTimer.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: FermentTimer
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\ConfigKeyTest.java:[47,18] error: cannot access SkillChallengeClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\SkillChallengeClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: SkillChallengeClue
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\discord\DiscordStateTest.java:[95,28] error: cannot access DiscordGameEventType
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\discord\DiscordGameEventType.class
-[ERROR]     class file is invalid for class net.runelite.client.plugins.discord.DiscordGameEventType
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[38] error: cannot access LoggerFactory
-[ERROR]   bad class file: C:\Users\James\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar(/org/slf4j/LoggerFactory.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: LoggerFactory()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[44,2] error: cannot access Skybox
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skybox\Skybox.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Skybox
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[56,24] error: cannot access SkyboxPlugin
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\skybox\SkyboxPlugin.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: SkyboxPlugin()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[61,5] error: cannot access Marker
-[ERROR]   bad class file: C:\Users\James\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar(/org/slf4j/Marker.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getName()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\skybox\SkyboxTest.java:[71,10] error: cannot access ImageOutputStream
-[ERROR]   bad class file: /BCDEFG/java.desktop/javax/imageio/stream/ImageOutputStream.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: write(int)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[100,16] error: cannot access Lock
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ProfileManager$Lock.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Lock()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[100,48] error: cannot find symbol
-[ERROR]   symbol:   class Lock
-[ERROR]   location: class ProfileManager
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[104,3] error: cannot access ConfigProfile
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ConfigProfile.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: isInternal()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\config\ConfigManagerTest.java:[152,2] error: cannot access ConfigDescriptor
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\config\ConfigDescriptor.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: ConfigDescriptor(ConfigGroup,Collection<ConfigSectionDescriptor>,Collection<ConfigItemDescriptor>)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[145,2] error: cannot access SavedOffer
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\SavedOffer.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: getItemId()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[152,79] error: cannot access JsonElement
-[ERROR]   bad class file: C:\Users\James\.m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar(/com/google/gson/JsonElement.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: JsonElement()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[252,2] error: cannot access GrandExchangePanel
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\GrandExchangePanel.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: GrandExchangePanel(GrandExchangeSearchPanel,GrandExchangeOffersPanel)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\grandexchange\GrandExchangePluginTest.java:[253,47] error: cannot access GrandExchangeOffersPanel
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\grandexchange\GrandExchangeOffersPanel.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: GrandExchangeOffersPanel(GrandExchangePlugin)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\mining\MiningAnimationTest.java:[35,18] error: cannot access MiningAnimation
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\mining\MiningAnimation.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: MiningAnimation
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\chat\ChatMessageManagerTest.java:[184,11] error: cannot access ChatColorType
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\chat\ChatColorType.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: ChatColorType
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\chat\ChatMessageManagerTest.java:[171,27] error: cannot access ChatMessageBuilder
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\chat\ChatMessageBuilder.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: ChatMessageBuilder()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\ui\FontManagerTest.java:[35,16] error: cannot access FontManager
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\ui\FontManager.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: FontManager
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\ClueScrollPluginTest.java:[150,35] error: cannot access TrailCluetext
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$TrailCluetext.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: TrailCluetext()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\ClueScrollPluginTest.java:[214,35] error: cannot find symbol
-[ERROR]   symbol:   variable TrailCluetext
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[200,43] error: cannot access BiPredicate
-[ERROR]   bad class file: /BCDEF/java.base/java/util/function/BiPredicate.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: test(T,U)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR]   where T,U are type-variables:
-[ERROR]     T extends Object declared in class BiPredicate
-[ERROR]     U extends Object declared in class BiPredicate
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[939,35] error: cannot access Collection
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Collection.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Collection()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[950,35] error: cannot find symbol
-[ERROR]   symbol:   variable Collection
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[976,35] error: cannot find symbol
-[ERROR]   symbol:   variable Collection
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[987,35] error: cannot find symbol
-[ERROR]   symbol:   variable Collection
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1010,35] error: cannot find symbol
-[ERROR]   symbol:   variable Collection
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1021,35] error: cannot find symbol
-[ERROR]   symbol:   variable Collection
-[ERROR]   location: class InterfaceID
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1225,35] error: cannot access Menu
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Menu.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Menu()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\chatcommands\ChatCommandsPluginTest.java:[1228,35] error: cannot access Journalscroll
-[ERROR]   bad class file: C:\Users\James\.m2\repository\net\runelite\runelite-api\1.12.7-SNAPSHOT\runelite-api-1.12.7-SNAPSHOT.jar(/net/runelite/api/gameval/InterfaceID$Journalscroll.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Journalscroll()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\cluescrolls\clues\ThreeStepCrypticClueTest.java:[53,13] error: cannot access ThreeStepCrypticClue
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\cluescrolls\clues\ThreeStepCrypticClue.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: forText(String,String)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\loottracker\LootTrackerPluginTest.java:[258,49] error: cannot access LootTrackerPriceType
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\loottracker\LootTrackerPriceType.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: LootTrackerPriceType
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[80,75] error: cannot access MockSettings
-[ERROR]   bad class file: C:\Users\James\.m2\repository\org\mockito\mockito-core\3.1.0\mockito-core-3.1.0.jar(/org/mockito/MockSettings.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: extraInterfaces(Class<?>...)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[80,33] error: cannot access MockSettings
-[ERROR]   bad class file: C:\Users\James\.m2\repository\org\mockito\mockito-core\3.1.0\mockito-core-3.1.0.jar(/org/mockito/MockSettings.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: extraInterfaces(Class<?>...)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[92,46] error: cannot access Builder
-[ERROR]   bad class file: C:\Users\James\.m2\repository\com\squareup\okhttp3\okhttp\3.14.9\okhttp-3.14.9.jar(/okhttp3/OkHttpClient$Builder.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: Builder()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[110,3] error: cannot access AbstractModule
-[ERROR]   bad class file: C:\Users\James\.m2\repository\com\google\inject\guice\4.1.0\guice-4.1.0-no_aop.jar(/com/google/inject/AbstractModule.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: AbstractModule()
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[121,67] error: cannot access ClassLoader
-[ERROR]   bad class file: /9ABCDEFG/java.base/java/lang/ClassLoader.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: ClassLoader(ClassLoader)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[121,36] error: cannot access ClassLoader
-[ERROR]   bad class file: /9ABCDEFG/java.base/java/lang/ClassLoader.sig
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: ClassLoader(ClassLoader)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[124,29] error: cannot access ResourceInfo
-[ERROR]   bad class file: C:\Users\James\.m2\repository\com\google\guava\guava\23.2-jre\guava-23.2-jre.jar(/com/google/common/reflect/ClassPath$ResourceInfo.class)
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: of(String,ClassLoader)
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[142,26] error: cannot access PluginManager
-[ERROR]   bad class file: C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\target\classes\net\runelite\client\plugins\PluginManager.class
-[ERROR]     bad RuntimeInvisibleParameterAnnotations attribute: PluginManager
-[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
-[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\test\java\net\runelite\client\plugins\PluginManagerTest.java:[164,35] error: no suitable method found for createInjector(GraphvizModule)
-[ERROR]     method Guice.createInjector(Module...) is not applicable
-[ERROR]       (varargs mismatch; GraphvizModule cannot be converted to Module)
-[ERROR]     method Guice.createInjector(Iterable<? extends Module>) is not applicable
-[ERROR]       (argument mismatch; GraphvizModule cannot be converted to Iterable<? extends Module>)
-[ERROR]     method Guice.createInjector(Stage,Module...) is not applicable
-[ERROR]       (argument mismatch; GraphvizModule cannot be converted to Stage)
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project client: Compilation failure: Compilation failure:
+[ERROR] Picked up _JAVA_OPTIONS: -Dhttps.protocols=TLSv1.2
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[258,4] error: 'catch' without 'try'
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[183,3] error: 'try' without 'catch', 'finally' or resource declarations
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[267,3] error: illegal start of expression
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[268,2] error: ')' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[269,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[269,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[270,27] error: not a statement
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[270,47] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,3] error: illegal start of type
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[276,21] error: ';' expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[280,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[281,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[286,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[287,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[288,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[289,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[290,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[293,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[294,2] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[302,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[303,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[306,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[309,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[310,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[313,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[314,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[315,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[316,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[317,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[318,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[322,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[323,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[324,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[325,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[327,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[328,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[329,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[330,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[333,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[336,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[337,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[341,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[342,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[347,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[354,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[355,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[356,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[359,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[362,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[363,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[367,7] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[368,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[373,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[378,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[382,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[385,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[386,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[389,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[393,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[394,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[397,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[399,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[400,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[402,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[405,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[409,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[410,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[421,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[425,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[427,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[437,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[438,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[441,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[442,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[443,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[444,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[449,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[452,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[456,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[461,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[462,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[463,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[464,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[468,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[471,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,37] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[474,45] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[477,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[480,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[486,6] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[487,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[493,5] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[494,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[499,4] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[508,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[512,3] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[514,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[517,1] error: class, interface, or enum expected
+[ERROR] C:\Users\James\Desktop\RuneMirror\RuneLiteCustom\runelite-client\src\main\java\net\runelite\client\plugins\prushguest\PrushGuestPlugin.java:[519,55] error: <identifier> expected
 [ERROR] -> [Help 1]
 [ERROR]
 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
