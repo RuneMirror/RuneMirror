@@ -266,26 +266,7 @@ public class PrushGuestPlugin extends Plugin
 			}
 		});
 	}
-					a.getOption() == null ? "" : a.getOption(),
-					a.getTarget() == null ? "" : a.getTarget()
-				);
 
-				// Verify across multiple ticks to allow the client to set local destination
-				verifyMenuActionResult(a, ma, MAX_MENU_ACTION_RETRIES);
-			}
-			catch (Exception e)
-			{
-				log.debug("[RuneMirrorGuest] Exec failed: {}", e.getMessage());
-			}
-		});
-	}
-
-	private void scheduleWalkWorld(PrushAction a)
-	{
-		Integer wx = a.getWorldX();
-		Integer wy = a.getWorldY();
-		Integer wp = a.getWorldPlane();
-		Integer rdx = a.getRelDx();
 		Integer rdy = a.getRelDy();
 		if ((wx == null || wy == null || wp == null) && (rdx == null || rdy == null))
 		{
